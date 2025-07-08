@@ -29,7 +29,7 @@ const sampleNews = [
 const LatestNews = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Latest News</h2>
+      
       <div className="grid md:grid-cols-3 gap-6">
         {sampleNews.map((news) => (
           <div key={news.id} className="bg-white rounded-lg shadow hover:shadow-md transition">

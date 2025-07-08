@@ -1,6 +1,5 @@
-// components/NewsNavbar.jsx
 import { useState } from "react";
-import { Menu, X, Search } from "lucide-react";
+import { Home, Menu, X, Search } from "lucide-react";
 import {
   FaFacebookF,
   FaTwitter,
@@ -10,18 +9,27 @@ import {
 import { Link } from "react-router-dom";
 import news from "../assets/news.avif";
 
+// Nepali categories with slug
 const categories = [
-  "Home",
-  "Politics",
-  "Business",
-  "Technology",
-  "Sports",
-  "Entertainment",
-  "Health",
+  { name: "गृहपृष्ठ", slug: "", isHome: true },
+  { name: "समाचार", slug: "समाचार" },
+  { name: "समाज", slug: "समाज" },
+  { name: "राजनीति", slug: "राजनीति" },
+  { name: "स्थानीय तह", slug: "स्थानीय-तह" },
+  { name: "मनोरंजन", slug: "मनोरंजन" },
+  { name: "साहित्य", slug: "साहित्य" },
+  { name: "अन्तरबार्ता", slug: "अन्तरबार्ता" },
+  { name: "खेलकुद", slug: "खेलकुद" },
+  { name: "प्रदेश", slug: "प्रदेश" },
 ];
 
+// Slugify handles Unicode characters
 const slugify = (str) =>
-  str.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
+  str
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[।.,/#!$%^&*;:{}=\-_`~()]/g, "");
 
 export default function NewsNavbar() {
   const [open, setOpen] = useState(false);
@@ -49,33 +57,40 @@ export default function NewsNavbar() {
 
           {/* Logo + Title */}
           <div className="flex items-center justify-center w-full">
-            <img src={news} alt="Logo" className="h-14 w-14 rounded-full mr-3" />
+            <img
+              src={news}
+              alt="Logo"
+              className="h-14 w-14 rounded-full mr-3"
+            />
             <div>
               <h1 className="text-4xl font-extrabold text-blue-500 text-center">
-                NewsSphere
+                मेरोनजर
               </h1>
               <span className="text-base text-gray-500 block text-center">
-                Your Window to the World
+                विश्वतर्फको तपाईंको झ्याल
               </span>
             </div>
           </div>
 
           {/* Mobile Menu Icon */}
-          <button className="md:hidden absolute right-4" onClick={() => setOpen(true)}>
+          <button
+            className="md:hidden absolute right-4"
+            onClick={() => setOpen(true)}
+          >
             <Menu className="h-7 w-7 text-gray-800" />
           </button>
         </div>
 
         {/* Desktop Nav */}
         <nav className="bg-[#0B1E3C] text-white hidden md:flex justify-between items-center px-6 py-4">
-          <div className="flex flex-wrap gap-6 text-base font-medium">
-            {categories.map((cat) => (
+          <div className="flex flex-wrap gap-6 text-base font-medium items-center">
+            {categories.map(({ name, slug, isHome }) => (
               <Link
-                key={cat}
-                to={`/${slugify(cat === "Home" ? "" : cat)}`}
-                className="hover:text-blue-50 transition duration-150"
+                key={slug}
+                to={`/${slug}`}
+                className="hover:text-blue-50 transition duration-150 flex items-center gap-1"
               >
-                {cat}
+                {isHome ? <Home className="h-5 w-5" /> : name}
               </Link>
             ))}
           </div>
@@ -89,9 +104,6 @@ export default function NewsNavbar() {
               />
               <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
             </div>
-            <button className="bg-red-600 hover:bg-red-700 px-4 py-2 text-sm font-semibold rounded text-white transition duration-150">
-              Trending
-            </button>
           </div>
         </nav>
       </header>
@@ -99,19 +111,22 @@ export default function NewsNavbar() {
       {/* Mobile Menu */}
       {open && (
         <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center px-6">
-          <button className="absolute top-6 right-6" onClick={() => setOpen(false)}>
+          <button
+            className="absolute top-6 right-6"
+            onClick={() => setOpen(false)}
+          >
             <X className="h-7 w-7 text-gray-800" />
           </button>
 
           <nav className="flex flex-col gap-6 text-2xl font-semibold text-gray-900">
-            {categories.map((cat) => (
+            {categories.map(({ name, slug, isHome }) => (
               <Link
-                key={cat}
-                to={`/${slugify(cat === "Home" ? "" : cat)}`}
+                key={slug}
+                to={`/${slug}`}
                 onClick={() => setOpen(false)}
-                className="hover:text-red-600 transition"
+                className="hover:text-red-600 transition flex items-center gap-2"
               >
-                {cat}
+                {isHome ? <Home className="h-6 w-6" /> : name}
               </Link>
             ))}
           </nav>
@@ -122,9 +137,6 @@ export default function NewsNavbar() {
               placeholder="Search..."
               className="w-full px-4 py-3 rounded-full border text-sm"
             />
-            <button className="mt-3 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full text-sm font-semibold">
-              Trending
-            </button>
           </div>
         </div>
       )}

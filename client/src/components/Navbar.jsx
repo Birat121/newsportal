@@ -7,7 +7,7 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import news from "../assets/news.avif";
+import news from "../assets/seven.jpg";
 
 // Nepali categories with slug
 const categories = [
@@ -53,11 +53,12 @@ export default function NewsNavbar() {
               <img
                 src={news}
                 alt="Logo"
-                className="h-14 w-14 rounded-full mr-3"
+                className="h-16 w-auto object-contain mr-3"
               />
+
               <div>
                 <h1 className="text-4xl font-extrabold text-blue-500 text-center">
-                  मेरोनजर
+                  Seven Lake News
                 </h1>
                 <span className="text-base text-gray-500 block text-center">
                   विश्वतर्फको तपाईंको झ्याल

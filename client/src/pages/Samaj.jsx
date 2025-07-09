@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Politics = () => {
+const Samaj = () => {
   return (
     <div>Politics</div>
   )
 }
 
-export default Politics
+export default Samaj

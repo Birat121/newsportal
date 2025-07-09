@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Technology = () => {
+const Rajniti = () => {
   return (
     <div>Technology</div>
   )
 }
 
-export default Technology
+export default Rajniti

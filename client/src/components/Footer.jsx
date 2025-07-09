@@ -1,81 +1,45 @@
-import React from "react";
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Column 1: Quick Links */}
+          {/* Column 1: Address */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="/" className="text-gray-300 hover:text-white">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/world" className="text-gray-300 hover:text-white">
-                  World News
-                </a>
-              </li>
-              <li>
-                <a href="/technology" className="text-gray-300 hover:text-white">
-                  Technology
-                </a>
-              </li>
-              <li>
-                <a href="/health" className="text-gray-300 hover:text-white">
-                  Health
-                </a>
-              </li>
-              <li>
-                <a href="/sports" className="text-gray-300 hover:text-white">
-                  Sports
-                </a>
-              </li>
-            </ul>
+            <h4 className="text-lg font-semibold mb-4">ठेगाना</h4>
+            <address className="not-italic text-gray-300">
+              <p>१२३ समाचार मार्ग, काठमाडौं</p>
+              <p>नेपाल</p>
+              <p>फोन: +९७७-१-४२५६७८९</p>
+              <p>इमेल: info@newsportal.com</p>
+            </address>
           </div>
 
-          {/* Column 2: About Us & Legal */}
+          {/* Column 2: Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">About & Legal</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="/about" className="text-gray-300 hover:text-white">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="/privacy-policy" className="text-gray-300 hover:text-white">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="/terms" className="text-gray-300 hover:text-white">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="text-gray-300 hover:text-white">
-                  Contact Us
-                </a>
-              </li>
-            </ul>
+            <h4 className="text-lg font-semibold mb-4">सम्पर्क</h4>
+            <div className="text-gray-300 space-y-2">
+              <p>फोन १: +९७७-१-४१२३४५६</p>
+              <p>फोन २: +९७७-९८४१२३४५६७</p>
+              <p>इमेल १: contact@newsportal.com</p>
+              <p>इमेल २: support@newsportal.com</p>
+            </div>
           </div>
 
-          {/* Column 3: Social Media Links */}
+          {/* Column 3: Social Media */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
-            <ul className="flex space-x-4">
+            <h4 className="text-lg font-semibold mb-4">सामाजिक सञ्जाल</h4>
+            <ul className="flex space-x-6">
               <li>
                 <a
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="Facebook"
                 >
-                  <i className="fab fa-facebook-f"></i> Facebook
+                  <FaFacebookF />
                 </a>
               </li>
               <li>
@@ -83,9 +47,10 @@ const Footer = () => {
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="Twitter"
                 >
-                  <i className="fab fa-twitter"></i> Twitter
+                  <FaTwitter />
                 </a>
               </li>
               <li>
@@ -93,9 +58,10 @@ const Footer = () => {
                   href="https://instagram.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="Instagram"
                 >
-                  <i className="fab fa-instagram"></i> Instagram
+                  <FaInstagram />
                 </a>
               </li>
               <li>
@@ -103,15 +69,17 @@ const Footer = () => {
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="LinkedIn"
                 >
-                  <i className="fab fa-linkedin"></i> LinkedIn
+                  <FaLinkedinIn />
                 </a>
               </li>
             </ul>
           </div>
 
-        
+          {/* Column 4: Optional blank column */}
+          <div></div>
         </div>
 
         {/* Footer Bottom */}
@@ -124,3 +92,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

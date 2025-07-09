@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Business = () => {
+const Samachar = () => {
   return (
     <div>Business</div>
   )
 }
 
-export default Business
+export default Samachar

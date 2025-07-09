@@ -23,14 +23,6 @@ const categories = [
   { name: "प्रदेश", slug: "प्रदेश" },
 ];
 
-// Slugify handles Unicode characters
-const slugify = (str) =>
-  str
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[।.,/#!$%^&*;:{}=\-_`~()]/g, "");
-
 export default function NewsNavbar() {
   const [open, setOpen] = useState(false);
 
@@ -38,7 +30,7 @@ export default function NewsNavbar() {
     <>
       {/* Top Header */}
       <header className="bg-white border-b shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-10 flex items-center justify-between relative">
+        <div className="max-w-7xl mx-auto px-4 py-10 flex items-center relative justify-between md:justify-center">
           {/* Social Icons */}
           <div className="hidden md:flex gap-4 text-blue-700 text-xl absolute left-4">
             <a href="https://facebook.com" target="_blank" rel="noreferrer">
@@ -74,7 +66,7 @@ export default function NewsNavbar() {
 
           {/* Mobile Menu Icon */}
           <button
-            className="md:hidden absolute right-4"
+            className="md:hidden absolute right-4 z-10"
             onClick={() => setOpen(true)}
           >
             <Menu className="h-7 w-7 text-gray-800" />

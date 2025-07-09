@@ -48,21 +48,23 @@ export default function NewsNavbar() {
           </div>
 
           {/* Logo + Title */}
-          <div className="flex items-center justify-center w-full">
-            <img
-              src={news}
-              alt="Logo"
-              className="h-14 w-14 rounded-full mr-3"
-            />
-            <div>
-              <h1 className="text-4xl font-extrabold text-blue-500 text-center">
-                मेरोनजर
-              </h1>
-              <span className="text-base text-gray-500 block text-center">
-                विश्वतर्फको तपाईंको झ्याल
-              </span>
+          <Link to="/" className="block w-full">
+            <div className="flex items-center justify-center w-full cursor-pointer">
+              <img
+                src={news}
+                alt="Logo"
+                className="h-14 w-14 rounded-full mr-3"
+              />
+              <div>
+                <h1 className="text-4xl font-extrabold text-blue-500 text-center">
+                  मेरोनजर
+                </h1>
+                <span className="text-base text-gray-500 block text-center">
+                  विश्वतर्फको तपाईंको झ्याल
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
 
           {/* Mobile Menu Icon */}
           <button
@@ -75,7 +77,7 @@ export default function NewsNavbar() {
 
         {/* Desktop Nav */}
         <nav className="bg-[#0B1E3C] text-white hidden md:flex justify-between items-center px-6 py-4">
-          <div className="flex flex-wrap gap-6 text-base font-medium items-center">
+          <div className="flex flex-wrap gap-6  text-xl font-medium items-center">
             {categories.map(({ name, slug, isHome }) => (
               <Link
                 key={slug}

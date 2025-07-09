@@ -27,7 +27,7 @@ const sampleNews = [
 const LatestNews = () => {
   return (
     <section className="max-w-4xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold mb-6">📰 ताजा समाचार</h2>
+      
       <div className="space-y-6">
         {sampleNews.map((news) => (
           <div

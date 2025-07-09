@@ -92,8 +92,11 @@ const CategoryNewsSection = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-16">
       {Object.entries(newsByCategory).map(([category, articles]) => (
-        <div key={category}>
-          <div className="inline-block bg-red-600 text-white px-6 py-2 rounded mb-6 text-xl font-semibold shadow">
+        <div
+          key={category}
+          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 space-y-6"
+        >
+          <div className="inline-block bg-red-600 text-white px-6 py-2 rounded text-xl font-semibold shadow">
             {category}
           </div>
 
@@ -101,7 +104,7 @@ const CategoryNewsSection = () => {
             {articles.map((article) => (
               <div
                 key={article.id}
-                className="bg-white rounded-lg shadow hover:shadow-md transition w-full"
+                className="bg-gray-50 rounded-lg shadow hover:shadow-md transition w-full"
               >
                 <img
                   src={article.image}

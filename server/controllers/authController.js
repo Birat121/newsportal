@@ -1,81 +1,57 @@
-import User from "../models/userModel.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import CustomError from "../utils/customeError.js";
 
-// Register Function
-export const register = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (user) throw new CustomError("User already exists", 400);
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
-    
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Login Function
-export const login = async (req, res, next) => {
+// 🔐 Admin Login
+export const adminLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
+    if (!email || !password)
+      return res.status(400).json({ message: "Email and password are required" });
 
-    if (!user.password) {
-      return res.status(400).json({ message: "Please login with Google" });
-    }
+    if (
+      email !== process.env.ADMIN_EMAIL ||
+      password !== process.env.ADMIN_PASSWORD
+    )
+      return res.status(401).json({ message: "Invalid email or password" });
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) throw new CustomError("Invalid credentials", 401);
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "None",
-      maxAge: 24 * 60 * 60 * 1000,
+    const token = jwt.sign({ email }, process.env.ADMIN_JWT_SECRET, {
+      expiresIn: "3d",
     });
 
-    res.status(200).json({ token, message: "Login successful" });
+    res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+      })
+      .status(200)
+      .json({ message: "Admin login successful", token });
   } catch (error) {
     next(error);
   }
 };
 
-
-
-export const logout = async (req, res) => {
+// 🚪 Admin Logout
+export const adminLogout = (req, res) => {
   try {
     res.clearCookie("token");
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: "Logout failed", error: error.message });
   }
-};  
+};
 
-
-export const getCurrentUser = async (req, res, next) => {
+// 👤 Get Current Admin Info (Optional)
+export const getAdminProfile = (req, res) => {
   try {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.status(200).json({ user });
+    const decoded = jwt.verify(token, process.env.ADMIN_JWT_SECRET);
+    res.status(200).json({ admin: { email: decoded.email } });
   } catch (error) {
-    next(error);
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 

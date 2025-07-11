@@ -3,29 +3,22 @@ import React from "react";
 
 const AdSidebar = () => {
   return (
-    <aside className="w-full md:w-80 p-2 sticky top-4 hidden md:block">
-      
-
-      <div className="mb-6">
+    <div className="w-full px-4 pb-2">
+      <div className="w-full text-center">
         <img
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=320&q=80"
-          alt="Ad 1"
-          className="w-full rounded-lg"
-          style={{ height: "320px", objectFit: "cover" }}
+          src="https://media1.tenor.com/m/0nyQALWJnBoAAAAd/nepali-nepal.gif"
+          alt="Nepali Ad Banner"
+          className="w-full max-h-60 object-contain object-center rounded-md  mx-auto"
         />
       </div>
-
-      <div>
-        <img
-          src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=320&q=80"
-          alt="Ad 2"
-          className="w-full rounded-lg"
-          style={{ height: "320px", objectFit: "cover" }}
-        />
-      </div>
-    </aside>
+    </div>
   );
 };
 
 export default AdSidebar;
+
+
+
+
+
 

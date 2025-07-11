@@ -4,9 +4,12 @@ import AdSidebar from "../components/AdSidebar";
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="flex flex-col md:flex-row gap-6 p-4 ">
-      <main className="flex-1">{children}</main>
+    <div className="flex flex-col gap-6 p-4">
+      {/* Show ads after the navbar */}
       <AdSidebar />
+
+      {/* Main page content */}
+      <main className="flex-1">{children}</main>
     </div>
   );
 };

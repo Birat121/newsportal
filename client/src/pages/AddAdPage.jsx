@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddAdPage = () => {
   const [file, setFile] = useState(null);
@@ -10,22 +12,23 @@ const AddAdPage = () => {
     const selectedFile = e.target.files[0];
     if (
       selectedFile &&
-      (selectedFile.type === "image/gif" || selectedFile.type.startsWith("image/"))
+      (selectedFile.type === "image/gif" ||
+        selectedFile.type.startsWith("image/"))
     ) {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
     } else {
-      alert("Please select an image or GIF file.");
+      toast.error("Please select an image or GIF file.");
       setFile(null);
       setPreviewUrl(null);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!file) {
-      alert("Please select an image or GIF to upload.");
+      toast.error("Please select an image or GIF file.");
       return;
     }
 
@@ -33,39 +36,49 @@ const AddAdPage = () => {
     formData.append("adFile", file);
     formData.append("title", adTitle);
 
-    alert("Ad submitted! (Connect this with backend to save.)");
+    try {
+      const res = await axios.post("/api/ads/uploadAd", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    setFile(null);
-    setPreviewUrl(null);
-    setAdTitle("");
+      toast.success("✅ Ad uploaded successfully.");
+      console.log(res.data);
+      setFile(null);
+      setPreviewUrl(null);
+      setAdTitle("");
+    } catch (err) {
+      console.error("Upload error:", err.response?.data || err.message);
+
+      toast.error("❌ Failed to upload ad.");
+    }
   };
 
   return (
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 p-8 min-h-screen ">
-        <div className="max-w-md w-full p-6 ">
-          <h2 className="text-2xl font-semibold mb-4 text-center">Add New Advertisement</h2>
+      <main className="flex-1 p-8 min-h-screen">
+        <div className="max-w-md w-full p-6 mx-auto">
+          <h2 className="text-2xl font-semibold mb-4 text-center">
+            Add New Advertisement
+          </h2>
 
           <form onSubmit={handleSubmit}>
-            <label className="block mb-2 font-medium" htmlFor="adTitle">
+            <label className="block mb-2 font-medium">
               Ad Title (optional)
             </label>
             <input
               type="text"
-              id="adTitle"
               value={adTitle}
               onChange={(e) => setAdTitle(e.target.value)}
               className="w-full px-3 py-2 mb-4 border rounded"
-              placeholder="Enter ad title or description"
+              placeholder="Enter ad title"
             />
 
-            <label className="block mb-2 font-medium" htmlFor="adFile">
+            <label className="block mb-2 font-medium">
               Upload Image or GIF
             </label>
             <input
               type="file"
-              id="adFile"
               accept="image/gif,image/*"
               onChange={handleFileChange}
               className="mb-4"
@@ -96,5 +109,3 @@ const AddAdPage = () => {
 };
 
 export default AddAdPage;
-
-

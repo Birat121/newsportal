@@ -15,6 +15,7 @@ import AdListPage from "./pages/AdList";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const location = useLocation();
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <>
+    <ToastContainer />
       {!shouldHideLayout && <Navbar />}
 
       <Routes>

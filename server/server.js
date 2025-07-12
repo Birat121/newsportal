@@ -1,20 +1,27 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import cookieParser from 'cookie-parser'
-import cors from 'cors'
+import dotenv from 'dotenv';
+dotenv.config(); // ✅ Move this to the top
 
-const app = express()
-const PORT = process.env.PORT || 4000
-dotenv.config()
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors())
+import express from 'express';
+import connectDb from './utils/db.js';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import adRouter from './routes/AdRoute.js';
+
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+connectDb();
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('Hello')
-})
+  res.send('Hello');
+});
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`)
-})
+app.use('/api/ads', adRouter);
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});

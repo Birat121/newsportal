@@ -1,54 +1,52 @@
-// src/pages/AdListPage.jsx
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AdListPage = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fake data or replace with actual API call
+  // ✅ Fetch ads from backend
   useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        // Replace with actual API call like:
-        // const res = await axios.get('/api/ads');
-        const res = {
-          data: [
-            {
-              _id: 1,
-              title: "Header Banner Ad",
-              image: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif",
-            },
-            {
-              _id: 2,
-              title: "Sidebar Ad",
-              image: "https://via.placeholder.com/300x250.png?text=Ad+2",
-            },
-          ],
-        };
+  const fetchAds = async () => {
+    try {
+      const res = await axios.get("/api/ads/getAd");
+
+      console.log("Fetched ads:", res.data); // 👈 inspect shape
+
+      // ✅ Ensure it's an array before setting
+      if (Array.isArray(res.data)) {
         setAds(res.data);
-      } catch (err) {
-        console.error("Error fetching ads", err);
-      } finally {
-        setLoading(false);
+      } else {
+        console.warn("Ads response was not an array:", res.data);
+        setAds([]);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching ads", err);
+      setAds([]); // fallback to empty list to avoid map error
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchAds();
-  }, []);
+  fetchAds();
+}, []);
 
+
+  // ✅ Delete ad
   const handleDelete = async (id) => {
     const confirm = window.confirm("Are you sure you want to delete this ad?");
     if (!confirm) return;
 
     try {
-      // await axios.delete(`/api/ads/${id}`);
+      await axios.delete(`/api/ads/${id}`); // ← real DELETE call
       setAds((prev) => prev.filter((ad) => ad._id !== id));
-      alert("Ad deleted (mocked)");
+      toast.success("✅ Ad deleted successfully");
     } catch (err) {
-      alert("Failed to delete ad");
+      toast.error("❌ Failed to delete ad");
+      console.error(err);
     }
   };
 
@@ -71,12 +69,14 @@ const AdListPage = () => {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={ad.image}
-                    alt={ad.title}
+                    src={ad.imageUrl} // ← from backend
+                    alt={ad.description || "Ad image"}
                     className="h-24 w-40 object-contain rounded"
                   />
                   <div>
-                    <h3 className="font-semibold text-lg">{ad.title}</h3>
+                    <h3 className="font-semibold text-lg">
+                      {ad.description || "Untitled Ad"}
+                    </h3>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -103,5 +103,3 @@ const AdListPage = () => {
 };
 
 export default AdListPage;
-
-

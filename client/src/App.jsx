@@ -10,16 +10,20 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AddNews from "./pages/AddNews";
 import NewsList from "./pages/NewsList";
 import EditNews from "./pages/EditNews";
+import AddAdPage from "./pages/AddAdPage";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
 function App() {
   const location = useLocation();
   const hideLayoutPaths = ["/adminLogin"];
-  const isAdminRoute = location.pathname.startsWith("/admin/");
-  const shouldHideLayout = isAdminRoute || hideLayoutPaths.includes(location.pathname);
+  const isAdminRoute =
+    location.pathname === "/adminLogin" ||
+    location.pathname.startsWith("/admin/");
+
+  const shouldHideLayout =
+    isAdminRoute || hideLayoutPaths.includes(location.pathname);
 
   return (
     <>
@@ -35,6 +39,7 @@ function App() {
         <Route path="/admin/add-news" element={<AddNews />} />
         <Route path="/admin/news-list" element={<NewsList />} />
         <Route path="/admin/edit-news/:id" element={<EditNews />} />
+        <Route path="/admin/ad-add" element={<AddAdPage />} />
       </Routes>
 
       {!shouldHideLayout && <Footer />}
@@ -43,4 +48,3 @@ function App() {
 }
 
 export default App;
-

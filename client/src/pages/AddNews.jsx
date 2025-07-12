@@ -7,7 +7,7 @@ const AddNews = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState(null); // store File object here
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,25 +21,37 @@ const AddNews = () => {
     "opinion",
   ];
 
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!title || !category || !content || !image) {
+    if (!title || !category || !content || !imageFile) {
       setError("All fields are required");
       return;
     }
 
     try {
-      await axios.post("/api/news", {
-        title,
-        category,
-        content,
-        image,
+      // Prepare form data for file upload
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("content", content);
+      formData.append("image", imageFile);
+
+      await axios.post("/api/news", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+
       navigate("/admin/news-list");
     } catch (err) {
       setError("Failed to add news");
+      console.error(err);
     }
   };
 
@@ -49,9 +61,7 @@ const AddNews = () => {
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold mb-6">Add News</h2>
 
-        {error && (
-          <p className="mb-4 text-red-600 font-semibold">{error}</p>
-        )}
+        {error && <p className="mb-4 text-red-600 font-semibold">{error}</p>}
 
         <form onSubmit={handleSubmit} className="max-w-lg">
           <div className="mb-4">
@@ -95,13 +105,11 @@ const AddNews = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium">Image URL</label>
+            <label className="block mb-1 font-medium">Upload Image</label>
             <input
-              type="text"
-              className="w-full border px-3 py-2 rounded"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              placeholder="Enter image URL"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
               required
             />
           </div>
@@ -119,3 +127,4 @@ const AddNews = () => {
 };
 
 export default AddNews;
+

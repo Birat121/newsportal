@@ -1,6 +1,6 @@
 // src/pages/CategoryPage.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 // Fake News Generator for mock data
 const generateFakeNews = (count, category) => {
@@ -12,7 +12,9 @@ const generateFakeNews = (count, category) => {
   return Array.from({ length: count }, (_, i) => ({
     _id: i,
     title: `${category} News Title ${i + 1}`,
-    description: `This is the description for ${category} news number ${i + 1}.`,
+    description: `This is the description for ${category} news number ${
+      i + 1
+    }.`,
     image: `${sampleImages[i % sampleImages.length]}${i}`,
     category,
   }));
@@ -65,7 +67,11 @@ const CategoryPage = () => {
         <>
           <div className="space-y-6">
             {paginatedNews.map((news) => (
-              <div key={news._id} className="bg-white rounded shadow-md p-4">
+              <Link
+                to={`/news/${news._id}`}
+                key={news._id}
+                className="block bg-white rounded shadow-md p-4 hover:bg-gray-50 transition"
+              >
                 <img
                   src={news.image}
                   alt={news.title}
@@ -73,7 +79,7 @@ const CategoryPage = () => {
                 />
                 <h3 className="text-xl font-bold mb-2">{news.title}</h3>
                 <p className="text-gray-700 text-sm">{news.description}</p>
-              </div>
+              </Link>
             ))}
           </div>
 

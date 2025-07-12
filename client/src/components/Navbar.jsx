@@ -9,18 +9,18 @@ import {
 import { Link } from "react-router-dom";
 import news from "../assets/seven.jpg";
 
-// Nepali categories with slug
+// part of NewsNavbar.jsx
 const categories = [
   { name: "गृहपृष्ठ", slug: "", isHome: true },
-  { name: "समाचार", slug: "समाचार" },
-  { name: "समाज", slug: "समाज" },
-  { name: "राजनीति", slug: "राजनीति" },
-  { name: "स्थानीय तह", slug: "स्थानीय-तह" },
-  { name: "मनोरंजन", slug: "मनोरंजन" },
-  { name: "साहित्य", slug: "साहित्य" },
-  { name: "अन्तरबार्ता", slug: "अन्तरबार्ता" },
-  { name: "खेलकुद", slug: "खेलकुद" },
-  { name: "प्रदेश", slug: "प्रदेश" },
+  { name: "समाचार", slug: "category/समाचार" },
+  { name: "समाज", slug: "category/समाज" },
+  { name: "राजनीति", slug: "category/राजनीति" },
+  { name: "स्थानीय तह", slug: "category/स्थानीय-तह" },
+  { name: "मनोरंजन", slug: "category/मनोरंजन" },
+  { name: "साहित्य", slug: "category/साहित्य" },
+  { name: "अन्तरबार्ता", slug: "category/अन्तरबार्ता" },
+  { name: "खेलकुद", slug: "category/खेलकुद" },
+  { name: "प्रदेश", slug: "category/प्रदेश" },
 ];
 
 export default function NewsNavbar() {

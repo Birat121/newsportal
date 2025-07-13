@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const NewsList = () => {
   const [newsList, setNewsList] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const fetchNews = async () => {
     try {
-      // Mock data for testing without backend
-      const mockData = [
-        { _id: "1", title: "Breaking News 1", category: "sports" },
-        { _id: "2", title: "Politics Today", category: "राजनीति" },
-        { _id: "3", title: "Tech Trends", category: "technology" },
-      ];
-
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      setNewsList(mockData);
-    } catch {
+      const res = await axios.get("/api/news/getNews");
+      setNewsList(res.data); // Make sure backend returns an array
+    } catch (err) {
+      console.error("Error fetching news:", err);
       setError("Failed to fetch news");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -29,11 +26,18 @@ const NewsList = () => {
     fetchNews();
   }, []);
 
-  const handleDelete = (id) => {
-    if (!window.confirm("Are you sure you want to delete this news?")) return;
+  const handleDelete = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete this news?");
+    if (!confirm) return;
 
-    // Since no backend, simulate delete locally
-    setNewsList(newsList.filter((news) => news._id !== id));
+    try {
+      await axios.delete(`/api/news/deleteNews/${id}`);
+      setNewsList(newsList.filter((news) => news._id !== id));
+      toast.success("✅ News deleted");
+    } catch (err) {
+      toast.error("❌ Failed to delete");
+      console.error(err);
+    }
   };
 
   return (
@@ -44,7 +48,9 @@ const NewsList = () => {
 
         {error && <p className="mb-4 text-red-600">{error}</p>}
 
-        {Array.isArray(newsList) && newsList.length > 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : newsList.length > 0 ? (
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
@@ -85,4 +91,3 @@ const NewsList = () => {
 };
 
 export default NewsList;
-

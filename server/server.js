@@ -6,6 +6,8 @@ import connectDb from './utils/db.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import adRouter from './routes/AdRoute.js';
+import newsRouter from './routes/NewsRoute.js';
+import authRouter from './routes/authRoute.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -23,6 +25,8 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api/ads", adRouter);
+app.use("/api/news", newsRouter);
+app.use("/api/admin", authRouter);
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);

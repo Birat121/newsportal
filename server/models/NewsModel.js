@@ -7,13 +7,21 @@ const NewsSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Politics", "Sports", "Technology", "Business", "Entertainment"], // adjust based on your frontend
+    enum: [
+      "समाचार",
+      "समाज",
+      "राजनीति",
+      "स्थानीय तह",
+      "मनोरंजन",
+      "साहित्य",
+      "अन्तरबार्ता",
+      "खेलकुद",
+      "प्रदेश"
+    ]
   },
-  author: { type: String },
-  tags: [String],
+  trending: { type: Boolean, default: false },
   views: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }
 });
 
-const News = mongoose.model("News", NewsSchema);
-export default News;
+export default mongoose.model("News", NewsSchema);

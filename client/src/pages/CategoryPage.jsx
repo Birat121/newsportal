@@ -1,57 +1,35 @@
-// src/pages/CategoryPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-
-// Fake News Generator for mock data
-const generateFakeNews = (count, category) => {
-  const sampleImages = [
-    "https://source.unsplash.com/random/400x300?sig=",
-    "https://source.unsplash.com/collection/190727/400x300?sig=",
-  ];
-
-  return Array.from({ length: count }, (_, i) => ({
-    _id: i,
-    title: `${category} News Title ${i + 1}`,
-    description: `This is the description for ${category} news number ${
-      i + 1
-    }.`,
-    image: `${sampleImages[i % sampleImages.length]}${i}`,
-    category,
-  }));
-};
+import axios from "axios";
 
 const CategoryPage = () => {
   const { slug } = useParams();
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5; // ✅ Show 5 items per page (1 column × 5 rows)
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 5;
 
   useEffect(() => {
-    setLoading(true);
-    setCurrentPage(1); // ✅ Reset to page 1 when category changes
+    const fetchNews = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/news/category/${slug}?page=${currentPage}&limit=${pageSize}`);
+        setNewsList(res.data.news);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+        setNewsList([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setTimeout(() => {
-      const fakeNews = generateFakeNews(50, slug); // 50 fake items
-      setNewsList(fakeNews);
-      setLoading(false);
-    }, 500);
-  }, [slug]);
+    fetchNews();
+  }, [slug, currentPage]);
 
-  const totalPages = Math.ceil(newsList.length / pageSize);
-  const paginatedNews = newsList.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
+  const handlePrev = () => currentPage > 1 && setCurrentPage((p) => p - 1);
+  const handleNext = () => currentPage < totalPages && setCurrentPage((p) => p + 1);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -61,29 +39,30 @@ const CategoryPage = () => {
 
       {loading ? (
         <p className="text-center">Loading...</p>
-      ) : paginatedNews.length === 0 ? (
+      ) : newsList.length === 0 ? (
         <p className="text-center">No news found in this category.</p>
       ) : (
         <>
           <div className="space-y-6">
-            {paginatedNews.map((news) => (
+            {newsList.map((news) => (
               <Link
                 to={`/news/${news._id}`}
                 key={news._id}
                 className="block bg-white rounded shadow-md p-4 hover:bg-gray-50 transition"
               >
                 <img
-                  src={news.image}
+                  src={news.imageUrl}
                   alt={news.title}
                   className="w-full h-60 object-cover rounded mb-4"
                 />
                 <h3 className="text-xl font-bold mb-2">{news.title}</h3>
-                <p className="text-gray-700 text-sm">{news.description}</p>
+                <p className="text-gray-700 text-sm">
+                  {news.content?.substring(0, 100)}...
+                </p>
               </Link>
             ))}
           </div>
 
-          {/* Pagination Controls */}
           <div className="mt-8 flex justify-center items-center gap-4">
             <button
               onClick={handlePrev}
@@ -92,11 +71,9 @@ const CategoryPage = () => {
             >
               Previous
             </button>
-
             <span className="text-sm font-medium">
               Page {currentPage} of {totalPages}
             </span>
-
             <button
               onClick={handleNext}
               disabled={currentPage === totalPages}
@@ -112,3 +89,4 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+

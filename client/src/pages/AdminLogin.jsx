@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/AuthContext"; // ✅ Import useAuth
+import { toast } from "react-toastify";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState(""); // Admin email
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ Get login function from context
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,13 +20,16 @@ const AdminLogin = () => {
       const res = await axios.post(
         "/api/admin/login",
         { email, password },
-        { withCredentials: true } // IMPORTANT for cookie to be saved
+        { withCredentials: true }
       );
 
-      // You can store token or flag here if needed
-      localStorage.setItem("adminToken", res.data.token);
+      const token = res.data.token;
 
-      navigate("/admin/dashboard");
+      // ✅ Update auth context
+      login(token);
+
+      toast.success("Login successful");
+      navigate("/admin/dashboard"); // ✅ Will now work immediately
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
@@ -46,7 +53,7 @@ const AdminLogin = () => {
           <label className="block text-gray-700 mb-1">Email</label>
           <input
             type="email"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -57,7 +64,7 @@ const AdminLogin = () => {
           <label className="block text-gray-700 mb-1">Password</label>
           <input
             type="password"
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-4 py-2 border rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -76,3 +83,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

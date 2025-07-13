@@ -12,6 +12,7 @@ import NewsList from "./pages/NewsList";
 import EditNews from "./pages/EditNews";
 import AddAdPage from "./pages/AddAdPage";
 import AdListPage from "./pages/AdList";
+import EditAdPage from "./pages/EditAdPage";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -44,6 +45,7 @@ function App() {
         <Route path="/admin/edit-news/:id" element={<EditNews />} />
         <Route path="/admin/ad-add" element={<AddAdPage />} />
         <Route path="/admin/ad-list" element={<AdListPage />} />
+        <Route path="/admin/edit-ad/:id" element={<EditAdPage />} />
       </Routes>
 
       {!shouldHideLayout && <Footer />}

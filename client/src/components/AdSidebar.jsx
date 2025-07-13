@@ -8,7 +8,8 @@ const AdSidebar = () => {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const res = await axios.get("/api/ads");
+        const res = await axios.get("/api/ads/getAd");
+
         console.log("Fetched ads:", res.data); // Debug
         if (Array.isArray(res.data)) {
           setAds(res.data);

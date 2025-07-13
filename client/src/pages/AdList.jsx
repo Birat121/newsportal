@@ -3,50 +3,48 @@ import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ConfirmModal from "../components/ConfirmModal"; // 🆕
 
 const AdListPage = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false); // 🆕
+  const [deleteId, setDeleteId] = useState(null);     // 🆕
 
-  // ✅ Fetch ads from backend
   useEffect(() => {
-  const fetchAds = async () => {
-    try {
-      const res = await axios.get("/api/ads/getAd");
-
-      console.log("Fetched ads:", res.data); // 👈 inspect shape
-
-      // ✅ Ensure it's an array before setting
-      if (Array.isArray(res.data)) {
-        setAds(res.data);
-      } else {
-        console.warn("Ads response was not an array:", res.data);
+    const fetchAds = async () => {
+      try {
+        const res = await axios.get("/api/ads/getAd");
+        if (Array.isArray(res.data)) setAds(res.data);
+        else setAds([]);
+      } catch (err) {
+        console.error("Error fetching ads", err);
         setAds([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Error fetching ads", err);
-      setAds([]); // fallback to empty list to avoid map error
-    } finally {
-      setLoading(false);
-    }
+    };
+    fetchAds();
+  }, []);
+
+  // 🆕 Open modal
+  const confirmDelete = (id) => {
+    setDeleteId(id);
+    setModalOpen(true);
   };
 
-  fetchAds();
-}, []);
-
-
-  // ✅ Delete ad
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this ad?");
-    if (!confirm) return;
-
+  // 🆕 Delete handler
+  const handleDeleteConfirmed = async () => {
     try {
-      await axios.delete(`/api/ads/${id}`); // ← real DELETE call
-      setAds((prev) => prev.filter((ad) => ad._id !== id));
+      await axios.delete(`/api/ads/delete/${deleteId}`);
+      setAds((prev) => prev.filter((ad) => ad._id !== deleteId));
       toast.success("✅ Ad deleted successfully");
     } catch (err) {
       toast.error("❌ Failed to delete ad");
       console.error(err);
+    } finally {
+      setModalOpen(false);
+      setDeleteId(null);
     }
   };
 
@@ -69,7 +67,7 @@ const AdListPage = () => {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={ad.imageUrl} // ← from backend
+                    src={ad.imageUrl}
                     alt={ad.description || "Ad image"}
                     className="h-24 w-40 object-contain rounded"
                   />
@@ -87,7 +85,7 @@ const AdListPage = () => {
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(ad._id)}
+                    onClick={() => confirmDelete(ad._id)} // 🆕 trigger modal
                     className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
                   >
                     Delete
@@ -97,9 +95,18 @@ const AdListPage = () => {
             ))}
           </div>
         )}
+
+        {/* 🆕 ConfirmModal */}
+        <ConfirmModal
+          show={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={handleDeleteConfirmed}
+          message="Are you sure you want to delete this ad?"
+        />
       </main>
     </div>
   );
 };
 
 export default AdListPage;
+

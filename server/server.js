@@ -14,13 +14,15 @@ connectDb();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(
+
+));
 
 app.get('/', (req, res) => {
   res.send('Hello');
 });
 
-app.use('/api/ads', adRouter);
+app.use("/api/ads", adRouter);
 
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);

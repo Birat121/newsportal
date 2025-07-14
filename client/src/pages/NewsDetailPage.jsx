@@ -36,37 +36,41 @@ const NewsDetailPage = () => {
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
   if (!news)
-    return (
-      <p className="text-center py-10 text-red-600">News not found.</p>
-    );
+    return <p className="text-center py-10 text-red-600">News not found.</p>;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 border border-gray-200">
         {/* Title */}
-        <h1 className="text-3xl font-extrabold text-blue-800 mb-6">{news.title}</h1>
+        <h1 className="text-4xl font-bold text-blue-900 mb-4 leading-tight">
+          {news.title}
+        </h1>
 
         {/* Author */}
-        <p className="text-sm text-gray-600 mb-1">✍️ Seven Lake News</p>
+        <p className="text-sm text-gray-500 mb-1">
+          ✍️ <span className="font-medium">Seven Lake News</span>
+        </p>
 
         {/* Date */}
-        <p className="text-sm text-gray-600 mb-6">📅 {formatNepaliDate(news.createdAt)}</p>
+        <p className="text-sm text-gray-500 mb-6">
+          📅 {formatNepaliDate(news.createdAt)}
+        </p>
 
         {/* Image */}
         <img
           src={news.imageUrl}
           alt={news.title}
-          className="w-full h-64 object-cover rounded mb-6 shadow"
+          className="w-full h-72 object-cover rounded-lg mb-8 shadow-md"
         />
 
         {/* Content */}
-        <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line">
-          {news.content}
-        </p>
+        <div
+          className="text-gray-800 text-lg leading-8 tracking-wide prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: news.content }}
+        ></div>
       </div>
     </div>
   );
 };
 
 export default NewsDetailPage;
-

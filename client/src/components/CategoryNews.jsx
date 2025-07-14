@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+const stripHtmlTags = (html) => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>?/gm, "");
+};
+
 const CategoryNewsSection = () => {
   const [categoryNews, setCategoryNews] = useState({});
   const [loading, setLoading] = useState(true);
@@ -42,7 +47,7 @@ const CategoryNewsSection = () => {
                 className="bg-gray-50 rounded-lg shadow hover:shadow-md transition w-full"
               >
                 <img
-                  src={article.imageUrl}
+                  src={article.imageUrl || "/fallback-image.jpg"}
                   alt={article.title}
                   className="w-full h-44 object-cover rounded-t-lg"
                 />
@@ -51,7 +56,7 @@ const CategoryNewsSection = () => {
                     {article.title}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                    {article.content?.substring(0, 80)}...
+                    {stripHtmlTags(article.content).substring(0, 80)}...
                   </p>
                   <span className="text-blue-600 text-sm hover:underline block mt-2">
                     Read more →
@@ -67,3 +72,4 @@ const CategoryNewsSection = () => {
 };
 
 export default CategoryNewsSection;
+

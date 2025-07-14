@@ -2,6 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
+const stripHtml = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
+
+const formatCategoryName = (slug) =>
+  slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
 const CategoryPage = () => {
   const { slug } = useParams();
   const [newsList, setNewsList] = useState([]);
@@ -14,7 +26,9 @@ const CategoryPage = () => {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/news/category/${slug}?page=${currentPage}&limit=${pageSize}`);
+        const res = await axios.get(
+          `/api/news/category/${slug}?page=${currentPage}&limit=${pageSize}`
+        );
         setNewsList(res.data.news);
         setTotalPages(res.data.totalPages);
       } catch (err) {
@@ -33,8 +47,8 @@ const CategoryPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 capitalize text-center">
-        {slug.replace(/-/g, " ")}
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        {formatCategoryName(slug)}
       </h1>
 
       {loading ? (
@@ -57,7 +71,7 @@ const CategoryPage = () => {
                 />
                 <h3 className="text-xl font-bold mb-2">{news.title}</h3>
                 <p className="text-gray-700 text-sm">
-                  {news.content?.substring(0, 100)}...
+                  {stripHtml(news.content).substring(0, 100)}...
                 </p>
               </Link>
             ))}
@@ -67,6 +81,7 @@ const CategoryPage = () => {
             <button
               onClick={handlePrev}
               disabled={currentPage === 1}
+              aria-disabled={currentPage === 1}
               className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
               Previous
@@ -77,6 +92,7 @@ const CategoryPage = () => {
             <button
               onClick={handleNext}
               disabled={currentPage === totalPages}
+              aria-disabled={currentPage === totalPages}
               className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
             >
               Next
@@ -89,4 +105,5 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
 

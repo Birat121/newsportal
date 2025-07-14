@@ -23,6 +23,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-quill/dist/quill.snow.css';
+
 
 const App = () => {
   const location = useLocation();

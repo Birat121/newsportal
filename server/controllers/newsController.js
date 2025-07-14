@@ -98,8 +98,23 @@ export async function updateNews(req, res) {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).json({ message: "News not found" });
 
-    const { title, content, category, trending } = req.body;
+    let title, content, category, trending;
 
+    // ✅ Handle both multipart (newsData as JSON string) and normal form submission
+    if (req.body.newsData) {
+      const parsed = JSON.parse(req.body.newsData);
+      title = parsed.title;
+      content = parsed.content;
+      category = parsed.category;
+      trending = parsed.trending;
+    } else {
+      title = req.body.title;
+      content = req.body.content;
+      category = req.body.category;
+      trending = req.body.trending;
+    }
+
+    // ✅ Handle image upload if new file is provided
     if (req.file) {
       const uploadResponse = await imagekit.upload({
         file: req.file.buffer,
@@ -108,17 +123,20 @@ export async function updateNews(req, res) {
       news.imageUrl = uploadResponse.url;
     }
 
+    // ✅ Update fields
     news.title = title ?? news.title;
     news.content = content ?? news.content;
     news.category = category ?? news.category;
-    news.trending = trending ?? news.trending;
+    news.trending = trending === "true" || trending === true;
 
     await news.save();
     res.json(news);
   } catch (err) {
+    console.error("Update news error:", err);
     res.status(500).json({ message: err.message });
   }
 }
+
 
 // DELETE /api/news/deleteNews/:id
 export async function deleteNews(req, res) {

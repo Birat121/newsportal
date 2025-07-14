@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ReactQuill from "react-quill";
 
 const categories = [
   { label: "News", value: "समाचार" },
@@ -168,15 +169,12 @@ const AddNews = () => {
 
               <div>
                 <label className="block mb-1 font-medium">Content</label>
-                <textarea
+                <ReactQuill
+                  theme="snow"
                   value={item.content}
-                  onChange={(e) =>
-                    handleInputChange(idx, "content", e.target.value)
-                  }
-                  className="w-full border px-3 py-2 rounded h-32"
-                  placeholder="Enter news content"
-                  required
-                ></textarea>
+                  onChange={(value) => handleInputChange(idx, "content", value)}
+                  className="bg-white"
+                />
               </div>
 
               <div>

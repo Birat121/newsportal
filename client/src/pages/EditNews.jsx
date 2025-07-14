@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ReactQuill from "react-quill";
 
 const categories = [
   { label: "News", value: "समाचार" },
@@ -25,7 +26,9 @@ const EditNews = () => {
     category: "",
     content: "",
     imageUrl: "",
+    trending: false,
   });
+
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -33,17 +36,26 @@ const EditNews = () => {
     axios
       .get(`/api/news/getNews/${id}`)
       .then((res) => {
-        const { title, category, content, imageUrl } = res.data;
-        setNewsData({ title, category, content, imageUrl });
+        console.log("Loaded News:", res.data); // 👈 Inspect this in browser console
+        const { title, category, content, imageUrl, trending } = res.data;
+        setNewsData({
+          title,
+          category,
+          content,
+          imageUrl,
+          trending: !!trending,
+        });
         setPreviewUrl(imageUrl);
       })
+
       .catch(() => {
         toast.error("Failed to load news data");
       });
   }, [id]);
 
   const handleChange = (e) => {
-    setNewsData({ ...newsData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setNewsData({ ...newsData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleFileChange = (e) => {
@@ -54,8 +66,7 @@ const EditNews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { title, category, content } = newsData;
+    const { title, category, content, trending } = newsData;
 
     if (!title || !category || !content) {
       toast.error("Title, category, and content are required");
@@ -64,7 +75,10 @@ const EditNews = () => {
 
     try {
       const formData = new FormData();
-      formData.append("newsData", JSON.stringify({ title, category, content }));
+      formData.append(
+        "newsData",
+        JSON.stringify({ title, category, content, trending })
+      );
 
       if (imageFile) formData.append("image", imageFile);
 
@@ -86,7 +100,7 @@ const EditNews = () => {
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold mb-6">Edit News</h2>
 
-        <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
+        <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
           <div>
             <label className="block mb-1 font-medium">Title</label>
             <input
@@ -119,12 +133,11 @@ const EditNews = () => {
 
           <div>
             <label className="block mb-1 font-medium">Content</label>
-            <textarea
-              name="content"
-              className="w-full border px-3 py-2 rounded h-32"
+            <ReactQuill
+              theme="snow"
               value={newsData.content}
-              onChange={handleChange}
-              required
+              onChange={(value) => setNewsData({ ...newsData, content: value })}
+              className="bg-white"
             />
           </div>
 
@@ -138,6 +151,20 @@ const EditNews = () => {
                 className="mt-3 h-40 object-contain rounded shadow"
               />
             )}
+          </div>
+
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="trending"
+              id="trending"
+              checked={newsData.trending}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            <label htmlFor="trending" className="font-medium">
+              Mark as Trending
+            </label>
           </div>
 
           <button

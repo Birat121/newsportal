@@ -68,24 +68,39 @@ const AddNews = () => {
 
     const formData = new FormData();
 
-    newsItems.forEach((item, idx) => {
+    // Step 1: Build the JSON data for news content
+    const newsPayload = [];
+
+    for (let i = 0; i < newsItems.length; i++) {
+      const item = newsItems[i];
+
       if (!item.title || !item.content || !item.category || !item.imageFile) {
-        toast.error(`Please fill all fields for news #${idx + 1}`);
+        toast.error(`Please fill all fields for news #${i + 1}`);
         return;
       }
 
-      formData.append(`news[${idx}][title]`, item.title);
-      formData.append(`news[${idx}][content]`, item.content);
-      formData.append(`news[${idx}][category]`, item.category);
-      formData.append(`news[${idx}][trending]`, item.trending);
-      formData.append(`news[${idx}][imageFile]`, item.imageFile);
-    });
+      // Push all non-file fields into a plain JS object
+      newsPayload.push({
+        title: item.title,
+        content: item.content,
+        category: item.category,
+        trending: item.trending,
+      });
 
+      // Append file separately as part of `images[]`
+      formData.append("images", item.imageFile);
+    }
+
+    // Step 2: Attach the JSON string of news data
+    formData.append("newsData", JSON.stringify(newsPayload));
+
+    // Step 3: Submit the form
     try {
       await axios.post("/api/news/multiple", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
 
       toast.success("✅ News articles added successfully");
@@ -169,9 +184,7 @@ const AddNews = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    handleFileChange(idx, e.target.files[0])
-                  }
+                  onChange={(e) => handleFileChange(idx, e.target.files[0])}
                   required
                 />
                 {item.previewUrl && (
@@ -223,6 +236,3 @@ const AddNews = () => {
 };
 
 export default AddNews;
-
-
-

@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../components/AuthContext"; // ✅ Import useAuth
+import { useAuth } from "../components/AuthContext";
 
 const AdminLogout = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth(); // ✅ Get logout function from context
+  const { logout, admin } = useAuth();
 
   useEffect(() => {
     const logoutAdmin = async () => {
@@ -15,11 +15,8 @@ const AdminLogout = () => {
           withCredentials: true,
         });
 
-        // ✅ Clear context and localStorage
-        logout();
-
+        logout(); // Clears localStorage and state
         toast.success("Logged out successfully");
-        navigate("/adminLogin");
       } catch (err) {
         toast.error("Logout failed");
         console.error(err);
@@ -27,7 +24,14 @@ const AdminLogout = () => {
     };
 
     logoutAdmin();
-  }, [navigate, logout]);
+  }, [logout]);
+
+  // 🚀 Redirect only after admin is null
+  useEffect(() => {
+    if (!admin) {
+      navigate("/adminLogin");
+    }
+  }, [admin, navigate]);
 
   return (
     <div className="flex items-center justify-center h-screen">

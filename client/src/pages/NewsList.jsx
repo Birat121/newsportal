@@ -3,17 +3,22 @@ import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ConfirmModal from "../components/ConfirmModal"; // Import ConfirmModal
 
 const NewsList = () => {
   const [newsList, setNewsList] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [showConfirm, setShowConfirm] = useState(false); // Show/hide modal
+  const [selectedNewsId, setSelectedNewsId] = useState(null); // Which news to delete
+
   const navigate = useNavigate();
 
   const fetchNews = async () => {
     try {
       const res = await axios.get("/api/news/getNews");
-      setNewsList(res.data); // Make sure backend returns an array
+      setNewsList(res.data);
     } catch (err) {
       console.error("Error fetching news:", err);
       setError("Failed to fetch news");
@@ -26,18 +31,33 @@ const NewsList = () => {
     fetchNews();
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this news?");
-    if (!confirm) return;
+  // When user clicks Delete button, open the modal and set selected news ID
+  const confirmDelete = (id) => {
+    setSelectedNewsId(id);
+    setShowConfirm(true);
+  };
+
+  // Called when user confirms deletion in modal
+  const handleDelete = async () => {
+    if (!selectedNewsId) return;
 
     try {
-      await axios.delete(`/api/news/deleteNews/${id}`);
-      setNewsList(newsList.filter((news) => news._id !== id));
+      await axios.delete(`/api/news/deleteNews/${selectedNewsId}`);
+      setNewsList(newsList.filter((news) => news._id !== selectedNewsId));
       toast.success("✅ News deleted");
     } catch (err) {
       toast.error("❌ Failed to delete");
       console.error(err);
+    } finally {
+      setShowConfirm(false);
+      setSelectedNewsId(null);
     }
+  };
+
+  // Called when user cancels deletion in modal
+  const handleCancel = () => {
+    setShowConfirm(false);
+    setSelectedNewsId(null);
   };
 
   return (
@@ -72,7 +92,7 @@ const NewsList = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(_id)}
+                      onClick={() => confirmDelete(_id)}
                       className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                     >
                       Delete
@@ -85,9 +105,18 @@ const NewsList = () => {
         ) : (
           <p>No news found.</p>
         )}
+
+        {/* Confirm Modal */}
+        <ConfirmModal
+          show={showConfirm}
+          onClose={handleCancel}
+          onConfirm={handleDelete}
+          message="Are you sure you want to delete this news article?"
+        />
       </main>
     </div>
   );
 };
 
 export default NewsList;
+

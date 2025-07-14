@@ -1,7 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+const categories = [
+  { label: "News", value: "समाचार" },
+  { label: "Society", value: "समाज" },
+  { label: "Politics", value: "राजनीति" },
+  { label: "Local Government", value: "स्थानीय तह" },
+  { label: "Entertainment", value: "मनोरंजन" },
+  { label: "Literature", value: "साहित्य" },
+  { label: "Interview", value: "अन्तरबार्ता" },
+  { label: "Sports", value: "खेलकुद" },
+  { label: "Province", value: "प्रदेश" },
+];
 
 const EditNews = () => {
   const { id } = useParams();
@@ -11,47 +24,59 @@ const EditNews = () => {
     title: "",
     category: "",
     content: "",
-    image: "",
+    imageUrl: "",
   });
-  const [error, setError] = useState("");
-
-  const categories = [
-    "news",
-    "business",
-    "world",
-    "technology",
-    "sports",
-    "entertainment",
-    "opinion",
-  ];
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`/api/news/${id}`)
-      .then((res) => setNewsData(res.data))
-      .catch(() => setError("Failed to load news data"));
+      .get(`/api/news/getNews/${id}`)
+      .then((res) => {
+        const { title, category, content, imageUrl } = res.data;
+        setNewsData({ title, category, content, imageUrl });
+        setPreviewUrl(imageUrl);
+      })
+      .catch(() => {
+        toast.error("Failed to load news data");
+      });
   }, [id]);
 
   const handleChange = (e) => {
     setNewsData({ ...newsData, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    setPreviewUrl(file ? URL.createObjectURL(file) : newsData.imageUrl);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    const { title, category, content, image } = newsData;
+    const { title, category, content } = newsData;
 
-    if (!title || !category || !content || !image) {
-      setError("All fields are required");
+    if (!title || !category || !content) {
+      toast.error("Title, category, and content are required");
       return;
     }
 
     try {
-      await axios.put(`/api/news/${id}`, newsData);
+      const formData = new FormData();
+      formData.append("newsData", JSON.stringify({ title, category, content }));
+
+      if (imageFile) formData.append("image", imageFile);
+
+      await axios.put(`/api/news/updateNews/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      toast.success("News updated successfully!");
       navigate("/admin/news-list");
-    } catch {
-      setError("Failed to update news");
+    } catch (err) {
+      toast.error("Failed to update news");
+      console.error(err);
     }
   };
 
@@ -61,12 +86,8 @@ const EditNews = () => {
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold mb-6">Edit News</h2>
 
-        {error && (
-          <p className="mb-4 text-red-600 font-semibold">{error}</p>
-        )}
-
-        <form onSubmit={handleSubmit} className="max-w-lg">
-          <div className="mb-4">
+        <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
+          <div>
             <label className="block mb-1 font-medium">Title</label>
             <input
               type="text"
@@ -78,7 +99,7 @@ const EditNews = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div>
             <label className="block mb-1 font-medium">Category</label>
             <select
               name="category"
@@ -89,14 +110,14 @@ const EditNews = () => {
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="mb-4">
+          <div>
             <label className="block mb-1 font-medium">Content</label>
             <textarea
               name="content"
@@ -104,19 +125,19 @@ const EditNews = () => {
               value={newsData.content}
               onChange={handleChange}
               required
-            ></textarea>
+            />
           </div>
 
-          <div className="mb-4">
-            <label className="block mb-1 font-medium">Image URL</label>
-            <input
-              type="text"
-              name="image"
-              className="w-full border px-3 py-2 rounded"
-              value={newsData.image}
-              onChange={handleChange}
-              required
-            />
+          <div>
+            <label className="block mb-1 font-medium">Upload Image</label>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+            {previewUrl && (
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="mt-3 h-40 object-contain rounded shadow"
+              />
+            )}
           </div>
 
           <button

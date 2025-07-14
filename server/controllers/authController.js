@@ -42,16 +42,4 @@ export const adminLogout = (req, res) => {
   }
 };
 
-// 👤 Get Current Admin Info (Optional)
-export const getAdminProfile = (req, res) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.ADMIN_JWT_SECRET);
-    res.status(200).json({ admin: { email: decoded.email } });
-  } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
-  }
-};
 

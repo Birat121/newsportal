@@ -35,34 +35,38 @@ const NewsDetailPage = () => {
   }, [id]);
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
-  if (!news) return <p className="text-center py-10 text-red-600">News not found.</p>;
+  if (!news)
+    return (
+      <p className="text-center py-10 text-red-600">News not found.</p>
+    );
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Title */}
-      <h1 className="text-3xl font-extrabold text-blue-800 mb-4">
-        {news.title}
-      </h1>
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold text-blue-800 mb-6">{news.title}</h1>
 
-      {/* Author and Date */}
-      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-        <span>✍️ Seven Lake News</span>
-        <span>📅 {formatNepaliDate(news.createdAt)}</span>
+        {/* Author */}
+        <p className="text-sm text-gray-600 mb-1">✍️ Seven Lake News</p>
+
+        {/* Date */}
+        <p className="text-sm text-gray-600 mb-6">📅 {formatNepaliDate(news.createdAt)}</p>
+
+        {/* Image */}
+        <img
+          src={news.imageUrl}
+          alt={news.title}
+          className="w-full h-64 object-cover rounded mb-6 shadow"
+        />
+
+        {/* Content */}
+        <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line">
+          {news.content}
+        </p>
       </div>
-
-      {/* Image */}
-      <img
-        src={news.imageUrl}
-        alt={news.title}
-        className="w-full h-64 object-cover rounded shadow mb-6"
-      />
-
-      {/* Description */}
-      <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line">
-        {news.content}
-      </p>
     </div>
   );
 };
 
 export default NewsDetailPage;
+

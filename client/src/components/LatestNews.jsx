@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+// Utility to remove HTML tags from content
 const stripHtmlTags = (html) => {
   if (!html) return "";
   return html.replace(/<[^>]+>/g, "");
@@ -15,12 +16,21 @@ const LatestNews = () => {
     const fetchLatestNews = async () => {
       try {
         const res = await axios.get("/api/news/getNews");
+
+        console.log("Fetched news:", res.data);
+
+        if (!Array.isArray(res.data)) {
+          throw new Error("Expected an array, got: " + JSON.stringify(res.data));
+        }
+
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        setLatestNews(sorted.slice(0, 4));
+
+        setLatestNews(sorted.slice(0, 4)); // Show latest 4
       } catch (err) {
-        console.error("Failed to fetch latest news", err);
+        console.error("Failed to fetch latest news:", err.message);
+        setLatestNews([]); // fallback in case of error
       } finally {
         setLoading(false);
       }
@@ -32,7 +42,9 @@ const LatestNews = () => {
   return (
     <section className="max-w-4xl mx-auto px-4 py-10">
       {loading ? (
-        <p className="text-center">Loading...</p>
+        <p className="text-center text-gray-500">Loading latest news...</p>
+      ) : latestNews.length === 0 ? (
+        <p className="text-center text-gray-500">No news articles found.</p>
       ) : (
         <div className="space-y-6">
           {latestNews.map((news) => (

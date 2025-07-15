@@ -12,28 +12,47 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuth(); // ✅ Get login function from context
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  console.group("AdminLogin attempt");
+  console.log("Submitting login with:", { email, password: password ? "***" : "" });
 
-    try {
-      const res = await axios.post(
-        "/api/admin/login",
-        { email, password },
-        { withCredentials: true }
-      );
+  try {
+    const res = await axios.post(
+      "/api/admin/login",
+      { email, password },
+      { withCredentials: true }
+    );
+    console.log("Response from backend:", res);
 
-      const token = res.data.token;
-
-      // ✅ Update auth context
-      login(token);
-
-      toast.success("Login successful");
-      navigate("/admin/dashboard"); // ✅ Will now work immediately
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+    const token = res.data.token;
+    if (!token) {
+      throw new Error("No token received in response");
     }
-  };
+
+    console.log("Received token:", token);
+    login(token);
+
+    toast.success("Login successful");
+    console.groupEnd();
+    navigate("/admin/dashboard");
+  } catch (err) {
+    console.error("Login error:", err);
+
+    if (err.response) {
+      console.error("Error response data:", err.response.data);
+      setError(err.response.data.message || "Login failed with server error");
+    } else if (err.request) {
+      console.error("No response received, request was:", err.request);
+      setError("No response from server. Check your network or server.");
+    } else {
+      console.error("Error setting up request:", err.message);
+      setError(err.message);
+    }
+    console.groupEnd();
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">

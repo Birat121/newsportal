@@ -1,17 +1,44 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
+import bs from "bikram-sambat-js";
 
-// Format date in Nepali
+// 👇 Nepali month and digit helpers
+const nepaliMonths = [
+  "बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन",
+  "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
+];
+
+const nepaliDigits = {
+  "0": "०", "1": "१", "2": "२", "3": "३", "4": "४",
+  "5": "५", "6": "६", "7": "७", "8": "८", "9": "९"
+};
+
+const toNepaliNumber = (number) =>
+  number.toString().split("").map(d => nepaliDigits[d] || d).join("");
+
+const getTimePeriod = (hour) => {
+  if (hour < 4) return "मध्यरात";
+  if (hour < 12) return "बिहान";
+  if (hour < 17) return "दिउँसो";
+  if (hour < 20) return "साँझ";
+  return "राति";
+};
+
+// ✅ Format Nepali Date & Time in BS
 const formatNepaliDate = (isoDate) => {
   const date = new Date(isoDate);
-  return new Intl.DateTimeFormat("ne-NP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  }).format(date);
+  const [bsYear, bsMonth, bsDay] = bs.toBs(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate()
+  );
+
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const hour12 = hour % 12 || 12;
+
+  return `${toNepaliNumber(bsDay)} ${nepaliMonths[bsMonth - 1]} ${toNepaliNumber(bsYear)}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
 };
 
 const NewsDetailPage = () => {
@@ -60,7 +87,7 @@ const NewsDetailPage = () => {
         <img
           src={news.imageUrl}
           alt={news.title}
-          className="w-full h-72 object-cover rounded-lg mb-8 shadow-md"
+          className="w-full h-[500px] md:h-[600px] object-cover rounded-xl mb-10 shadow-xl"
         />
 
         {/* Content */}
@@ -74,3 +101,4 @@ const NewsDetailPage = () => {
 };
 
 export default NewsDetailPage;
+

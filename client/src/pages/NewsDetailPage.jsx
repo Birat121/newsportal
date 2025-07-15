@@ -1,22 +1,19 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
-import bs from "bikram-sambat-js";
+import NepaliDate from "nepali-date";
 
-// 👇 Nepali month and digit helpers
-const nepaliMonths = [
-  "बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन",
-  "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
-];
-
+// Nepali digit map
 const nepaliDigits = {
   "0": "०", "1": "१", "2": "२", "3": "३", "4": "४",
   "5": "५", "6": "६", "7": "७", "8": "८", "9": "९"
 };
 
-const toNepaliNumber = (number) =>
-  number.toString().split("").map(d => nepaliDigits[d] || d).join("");
+// Convert number to Nepali digits
+const toNepaliNumber = (num) =>
+  num.toString().split("").map(d => nepaliDigits[d] || d).join("");
 
+// Time of day period (e.g., साँझ, बिहान)
 const getTimePeriod = (hour) => {
   if (hour < 4) return "मध्यरात";
   if (hour < 12) return "बिहान";
@@ -25,20 +22,16 @@ const getTimePeriod = (hour) => {
   return "राति";
 };
 
-// ✅ Format Nepali Date & Time in BS
+// Format Nepali BS date + time
 const formatNepaliDate = (isoDate) => {
-  const date = new Date(isoDate);
-  const [bsYear, bsMonth, bsDay] = bs.toBs(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate()
-  );
+  const adDate = new Date(isoDate);
+  const bsDate = new NepaliDate(adDate);
 
-  const hour = date.getHours();
-  const minute = date.getMinutes();
+  const hour = adDate.getHours();
+  const minute = adDate.getMinutes();
   const hour12 = hour % 12 || 12;
 
-  return `${toNepaliNumber(bsDay)} ${nepaliMonths[bsMonth - 1]} ${toNepaliNumber(bsYear)}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
+  return `${toNepaliNumber(bsDate.getDate())} ${bsDate.getMonthName()} ${toNepaliNumber(bsDate.getYear())}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
 };
 
 const NewsDetailPage = () => {
@@ -101,4 +94,3 @@ const NewsDetailPage = () => {
 };
 
 export default NewsDetailPage;
-

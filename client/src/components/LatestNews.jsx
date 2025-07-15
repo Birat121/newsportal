@@ -68,13 +68,7 @@ const LatestNews = () => {
                     ? stripHtmlTags(news.content).substring(0, 150) + "..."
                     : stripHtmlTags(news.content)}
                 </p>
-                <span className="text-xs text-gray-400">
-                  {new Date(news.createdAt).toLocaleDateString("en-GB", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
+                
               </div>
             </Link>
           ))}

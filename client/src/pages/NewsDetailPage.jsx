@@ -22,7 +22,13 @@ const getTimePeriod = (hour) => {
   return "राति";
 };
 
-// Format Nepali BS date + time
+// Nepali months list for mapping
+const nepaliMonths = [
+  "बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन",
+  "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
+];
+
+// Format Nepali BS date + time with Nepali month names
 const formatNepaliDate = (isoDate) => {
   const adDate = new Date(isoDate);
   const bsDate = new NepaliDate(adDate);
@@ -31,7 +37,10 @@ const formatNepaliDate = (isoDate) => {
   const minute = adDate.getMinutes();
   const hour12 = hour % 12 || 12;
 
-  return `${toNepaliNumber(bsDate.getDate())} ${bsDate.getMonthName()} ${toNepaliNumber(bsDate.getYear())}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
+  // getMonth() returns 1-12, so adjust index for array
+  const nepaliMonth = nepaliMonths[bsDate.getMonth() - 1];
+
+  return `${toNepaliNumber(bsDate.getDate())} ${nepaliMonth} ${toNepaliNumber(bsDate.getYear())}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
 };
 
 const NewsDetailPage = () => {

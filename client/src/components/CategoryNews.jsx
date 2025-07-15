@@ -39,8 +39,8 @@ const CategoryNewsSection = () => {
             {category}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.map((article) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {articles.slice(0, 6).map((article) => (
               <Link
                 to={`/news/${article._id}`}
                 key={article._id}
@@ -72,4 +72,3 @@ const CategoryNewsSection = () => {
 };
 
 export default CategoryNewsSection;
-

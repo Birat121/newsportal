@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 import ConfirmModal from "../components/ConfirmModal"; // 🆕
 
@@ -14,7 +14,7 @@ const AdListPage = () => {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const res = await axios.get("/api/ads/getAd");
+        const res = await api.get("/api/ads/getAd");
         if (Array.isArray(res.data)) setAds(res.data);
         else setAds([]);
       } catch (err) {
@@ -36,7 +36,7 @@ const AdListPage = () => {
   // 🆕 Delete handler
   const handleDeleteConfirmed = async () => {
     try {
-      await axios.delete(`/api/ads/delete/${deleteId}`);
+      await api.delete(`/api/ads/delete/${deleteId}`);
       setAds((prev) => prev.filter((ad) => ad._id !== deleteId));
       toast.success("✅ Ad deleted successfully");
     } catch (err) {

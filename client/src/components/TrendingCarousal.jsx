@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import axios from "axios";
+import api from "../utils/api";
 import { Link } from "react-router-dom";
 
 export default function TrendingCarousel() {
@@ -39,7 +39,7 @@ export default function TrendingCarousel() {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await axios.get("/api/news/trending");
+        const res = await api.get("/api/news/trending");
         setTrendingNews(res.data);
       } catch (err) {
         console.error("Failed to fetch trending news", err);

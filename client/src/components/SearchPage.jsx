@@ -1,7 +1,7 @@
 // src/pages/SearchResultsPage.jsx
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 const SearchResultsPage = () => {
   const { search } = useLocation();
@@ -11,7 +11,7 @@ const SearchResultsPage = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await axios.get("/api/news/getNews");
+        const res = await api.get("/api/news/getNews");
         const filtered = res.data.filter((item) =>
           item.title.toLowerCase().includes(query.toLowerCase())
         );

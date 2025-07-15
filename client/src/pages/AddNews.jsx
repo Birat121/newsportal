@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
@@ -97,7 +97,7 @@ const AddNews = () => {
 
     // Step 3: Submit the form
     try {
-      await axios.post("/api/news/multiple", formData, {
+      await api.post("/api/news/multiple", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

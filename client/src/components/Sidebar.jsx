@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../utils/api";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     try {
       // 🔐 If you're using cookies for token:
-      await axios.post("/api/admin/logout", null, { withCredentials: true });
+      await api.post("/api/admin/logout", null, { withCredentials: true });
 
       // 🗑️ Clear token from localStorage if used
       localStorage.removeItem("adminToken");

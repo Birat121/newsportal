@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 import ConfirmModal from "../components/ConfirmModal"; // Import ConfirmModal
 
@@ -17,7 +17,7 @@ const NewsList = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await axios.get("/api/news/getNews");
+      const res = await api.get("/api/news/getNews");
       setNewsList(res.data);
     } catch (err) {
       console.error("Error fetching news:", err);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 
 const AddAdPage = () => {
@@ -37,7 +37,7 @@ const AddAdPage = () => {
     formData.append("title", adTitle);
 
     try {
-      const res = await axios.post("/api/ads/uploadAd", formData, {
+      const res = await api.post("/api/ads/uploadAd", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

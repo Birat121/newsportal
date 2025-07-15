@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../components/AuthContext";
+import api from "../utils/api";  // Use centralized axios instance
 
 const AdminLogout = () => {
   const navigate = useNavigate();
@@ -11,9 +11,7 @@ const AdminLogout = () => {
   useEffect(() => {
     const logoutAdmin = async () => {
       try {
-        await axios.post("/api/admin/logout", null, {
-          withCredentials: true,
-        });
+        await api.post("/api/admin/logout"); // no need to pass null explicitly
 
         logout(); // Clears localStorage and state
         toast.success("Logged out successfully");
@@ -26,7 +24,6 @@ const AdminLogout = () => {
     logoutAdmin();
   }, [logout]);
 
-  // 🚀 Redirect only after admin is null
   useEffect(() => {
     if (!admin) {
       navigate("/adminLogin");

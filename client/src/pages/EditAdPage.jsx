@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 
 const EditAdPage = () => {
@@ -16,7 +16,7 @@ const EditAdPage = () => {
   useEffect(() => {
     const fetchAd = async () => {
       try {
-        const res = await axios.get(`/api/ads/getAd/${id}`);
+        const res = await api.get(`/api/ads/getAd/${id}`);
         setDescription(res.data.description || "");
         setPreviewUrl(res.data.imageUrl || null); // existing image preview
       } catch (err) {
@@ -60,7 +60,7 @@ const EditAdPage = () => {
     }
 
     try {
-      await axios.put(`/api/ads/updateAd/${id}`, formData, {
+      await api.put(`/api/ads/updateAd/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Ad updated successfully");

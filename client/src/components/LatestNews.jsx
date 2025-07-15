@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Link } from "react-router-dom";
+import api from "../utils/api";
 
 // Utility to remove HTML tags from content
 const stripHtmlTags = (html) => {
@@ -15,7 +16,7 @@ const LatestNews = () => {
   useEffect(() => {
     const fetchLatestNews = async () => {
       try {
-        const res = await axios.get("/api/news/getNews");
+        const res = await api.get("/api/news/getNews");
 
         console.log("Fetched news:", res.data);
 

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 // Format date in Nepali
 const formatNepaliDate = (isoDate) => {
@@ -22,7 +22,7 @@ const NewsDetailPage = () => {
   useEffect(() => {
     const fetchNewsDetail = async () => {
       try {
-        const res = await axios.get(`/api/news/getNews/${id}`);
+        const res = await api.get(`/api/news/getNews/${id}`);
         setNews(res.data);
       } catch (err) {
         console.error("Failed to fetch news details", err);

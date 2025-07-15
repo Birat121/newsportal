@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 
 const stripHtml = (html) => {
   const div = document.createElement("div");
@@ -26,7 +26,7 @@ const CategoryPage = () => {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
+        const res = await api.get(
           `/api/news/category/${slug}?page=${currentPage}&limit=${pageSize}`
         );
         setNewsList(res.data.news);

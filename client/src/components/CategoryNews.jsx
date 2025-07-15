@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../utils/api";
 
 const stripHtmlTags = (html) => {
   if (!html) return "";
@@ -14,7 +14,7 @@ const CategoryNewsSection = () => {
   useEffect(() => {
     const fetchGroupedNews = async () => {
       try {
-        const res = await axios.get("/api/news/category-section");
+        const res = await api.get("/api/news/category-section");
         setCategoryNews(res.data);
       } catch (err) {
         console.error("Error fetching category news", err);

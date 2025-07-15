@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 const AdSidebar = () => {
   const [ads, setAds] = useState(null); // null = loading
@@ -8,7 +8,7 @@ const AdSidebar = () => {
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const res = await axios.get("/api/ads/getAd");
+        const res = await api.get("/api/ads/getAd");
 
         console.log("Fetched ads:", res.data); // Debug
         if (Array.isArray(res.data)) {

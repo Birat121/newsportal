@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../utils/api";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
@@ -33,7 +33,7 @@ const EditNews = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
-    axios
+    api
       .get(`/api/news/getNews/${id}`)
       .then((res) => {
         console.log("Loaded News:", res.data); // 👈 Inspect this in browser console

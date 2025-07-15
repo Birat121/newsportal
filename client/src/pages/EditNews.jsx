@@ -82,7 +82,7 @@ const EditNews = () => {
 
       if (imageFile) formData.append("image", imageFile);
 
-      await axios.put(`/api/news/updateNews/${id}`, formData, {
+      await api.put(`/api/news/updateNews/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

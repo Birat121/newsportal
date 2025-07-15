@@ -28,16 +28,23 @@ const nepaliMonths = [
   "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
 ];
 
+// Convert ISO date string to Nepal Standard Time Date object
+const toNepalTime = (isoDate) => {
+  const date = new Date(isoDate);
+  const nptOffsetMs = 5 * 60 * 60 * 1000 + 45 * 60 * 1000; // 5:45 in ms
+  const utc = date.getTime() + date.getTimezoneOffset() * 60000;
+  return new Date(utc + nptOffsetMs);
+};
+
 // Format Nepali BS date + time with Nepali month names
 const formatNepaliDate = (isoDate) => {
-  const adDate = new Date(isoDate);
+  const adDate = toNepalTime(isoDate);
   const bsDate = new NepaliDate(adDate);
 
   const hour = adDate.getHours();
   const minute = adDate.getMinutes();
   const hour12 = hour % 12 || 12;
 
-  // getMonth() returns 1-12, so adjust index for array
   const nepaliMonth = nepaliMonths[bsDate.getMonth() - 1];
 
   return `${toNepaliNumber(bsDate.getDate())} ${nepaliMonth} ${toNepaliNumber(bsDate.getYear())}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
@@ -103,3 +110,4 @@ const NewsDetailPage = () => {
 };
 
 export default NewsDetailPage;
+

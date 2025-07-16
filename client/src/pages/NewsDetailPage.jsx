@@ -75,33 +75,53 @@ const NewsDetailPage = () => {
     return <p className="text-center py-10 text-red-600">News not found.</p>;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="bg-white shadow-2xl rounded-2xl p-8 border border-gray-200">
-        {/* Title */}
-        <h1 className="text-4xl font-bold text-blue-900 mb-4 leading-tight">
+    <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
+      <div className="bg-white shadow-lg sm:shadow-2xl rounded-lg sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-200">
+        {/* Category - Blue box */}
+        {news.category && (
+          <div className="mb-3 sm:mb-4">
+            <span className="inline-block bg-blue-600 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
+              {news.category}
+            </span>
+          </div>
+        )}
+
+        {/* Title - Responsive sizing */}
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900 mb-3 sm:mb-4 leading-tight">
           {news.title}
         </h1>
 
-        {/* Author */}
-        <p className="text-sm text-gray-500 mb-1">
-          ✍️ <span className="font-medium">Seven Lake News</span>
+        {/* Author - Better mobile spacing */}
+        <p className="text-xs sm:text-sm text-gray-500 mb-1 flex items-center gap-1">
+          <span className="text-sm">✍️</span>
+          <span className="font-medium">Seven Lake News</span>
         </p>
 
-        {/* Date */}
-        <p className="text-sm text-gray-500 mb-6">
-          📅 {formatNepaliDate(news.createdAt)}
+        {/* Date - Better mobile spacing */}
+        <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 flex items-center gap-1">
+          <span className="text-sm">📅</span>
+          <span>{formatNepaliDate(news.createdAt)}</span>
         </p>
 
-        {/* Image */}
-        <img
-          src={news.imageUrl}
-          alt={news.title}
-          className="w-full h-[500px] md:h-[600px] object-cover rounded-xl mb-10 shadow-xl"
-        />
+        {/* Image - Responsive sizing with better mobile handling */}
+        <div className="mb-6 sm:mb-8 lg:mb-10">
+          <img
+            src={news.imageUrl}
+            alt={news.title}
+            className="w-full h-48 sm:h-64 md:h-80 lg:h-[500px] object-cover object-center rounded-lg sm:rounded-xl shadow-md sm:shadow-xl"
+          />
+        </div>
 
-        {/* Content */}
+        {/* Content - Responsive text and spacing */}
         <div
-          className="text-gray-800 text-lg leading-8 tracking-wide prose max-w-none"
+          className="text-gray-800 text-base sm:text-lg leading-6 sm:leading-7 lg:leading-8 tracking-wide prose prose-sm sm:prose-base lg:prose-lg max-w-none
+          prose-headings:text-gray-900 prose-headings:font-semibold
+          prose-p:mb-4 prose-p:text-justify
+          prose-ul:mb-4 prose-ol:mb-4
+          prose-li:mb-1
+          prose-img:rounded-lg prose-img:shadow-md
+          prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic
+          prose-a:text-blue-600 prose-a:hover:text-blue-800"
           dangerouslySetInnerHTML={{ __html: news.content }}
         ></div>
       </div>
@@ -110,4 +130,3 @@ const NewsDetailPage = () => {
 };
 
 export default NewsDetailPage;
-

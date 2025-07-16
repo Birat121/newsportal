@@ -1,9 +1,12 @@
+// src/components/Sidebar.jsx
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/api";
+import { useAuth } from "./AuthContext";
 
 const Sidebar = () => {
+  const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,12 +20,9 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      // 🔐 If you're using cookies for token:
       await api.post("/api/admin/logout", null, { withCredentials: true });
 
-      // 🗑️ Clear token from localStorage if used
-      localStorage.removeItem("adminToken");
-
+      logout(); // Clear auth state
       toast.success("Logged out successfully");
       navigate("/adminLogin");
     } catch (error) {
@@ -47,7 +47,6 @@ const Sidebar = () => {
         </Link>
       ))}
 
-      {/* 🚪 Logout Button */}
       <button
         onClick={handleLogout}
         className="mt-auto bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded transition"

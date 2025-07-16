@@ -1,34 +1,49 @@
-import React, { useEffect } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+
 import { useAuth } from "../components/AuthContext";
-import api from "../utils/api";  // Use centralized axios instance
+import api from "../utils/api";
 
 const AdminLogout = () => {
   const navigate = useNavigate();
   const { logout, admin } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
+    // Prevent multiple logout attempts
+    if (isLoggingOut) return;
+    
     const logoutAdmin = async () => {
+      setIsLoggingOut(true);
+      
       try {
-        await api.post("/api/admin/logout"); // no need to pass null explicitly
-
-        logout(); // Clears localStorage and state
+        await api.post("/api/admin/logout");
         toast.success("Logged out successfully");
       } catch (err) {
         toast.error("Logout failed");
         console.error(err);
+      } finally {
+        // Always clear auth state and navigate
+        logout();
+        
+        // Use setTimeout to ensure state update completes
+        setTimeout(() => {
+          navigate("/adminLogin", { replace: true });
+        }, 100);
       }
     };
 
     logoutAdmin();
-  }, [logout]);
+  }, [logout, navigate, isLoggingOut]);
 
+  // Fallback: if admin becomes null, navigate
   useEffect(() => {
-    if (!admin) {
-      navigate("/adminLogin");
+    if (!admin && !isLoggingOut) {
+      navigate("/adminLogin", { replace: true });
     }
-  }, [admin, navigate]);
+  }, [admin, navigate, isLoggingOut]);
 
   return (
     <div className="flex items-center justify-center h-screen">

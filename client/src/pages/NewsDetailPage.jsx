@@ -5,13 +5,25 @@ import NepaliDate from "nepali-date";
 
 // Nepali digit map
 const nepaliDigits = {
-  "0": "०", "1": "१", "2": "२", "3": "३", "4": "४",
-  "5": "५", "6": "६", "7": "७", "8": "८", "9": "९"
+  0: "०",
+  1: "१",
+  2: "२",
+  3: "३",
+  4: "४",
+  5: "५",
+  6: "६",
+  7: "७",
+  8: "८",
+  9: "९",
 };
 
 // Convert number to Nepali digits
 const toNepaliNumber = (num) =>
-  num.toString().split("").map(d => nepaliDigits[d] || d).join("");
+  num
+    .toString()
+    .split("")
+    .map((d) => nepaliDigits[d] || d)
+    .join("");
 
 // Time of day period (e.g., साँझ, बिहान)
 const getTimePeriod = (hour) => {
@@ -24,8 +36,18 @@ const getTimePeriod = (hour) => {
 
 // Nepali months list for mapping
 const nepaliMonths = [
-  "बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन",
-  "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
+  "बैशाख",
+  "जेठ",
+  "असार",
+  "श्रावण",
+  "भदौ",
+  "आश्विन",
+  "कार्तिक",
+  "मंसिर",
+  "पौष",
+  "माघ",
+  "फाल्गुण",
+  "चैत्र",
 ];
 
 // Convert ISO date string to Nepal Standard Time Date object
@@ -45,9 +67,13 @@ const formatNepaliDate = (isoDate) => {
   const minute = adDate.getMinutes();
   const hour12 = hour % 12 || 12;
 
-  const nepaliMonth = nepaliMonths[bsDate.getMonth() - 1];
+  const nepaliMonth = nepaliMonths[bsDate.getMonth()]; // ✅ fix applied
 
-  return `${toNepaliNumber(bsDate.getDate())} ${nepaliMonth} ${toNepaliNumber(bsDate.getYear())}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(minute.toString().padStart(2, "0"))} बजे`;
+  return `${toNepaliNumber(bsDate.getDate())} ${nepaliMonth} ${toNepaliNumber(
+    bsDate.getYear()
+  )}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(
+    minute.toString().padStart(2, "0")
+  )} बजे`;
 };
 
 const NewsDetailPage = () => {

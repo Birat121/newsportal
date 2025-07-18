@@ -171,7 +171,7 @@ export async function getNewsByCategory(req, res) {
 // GET /api/news/category-section (for homepage)
 export async function getNewsByCategoryGroup(req, res) {
   try {
-    const categories = ["समाचार", "समाज", "राजनीति", "खेलकुद"];
+    const categories = ["समाचार", "समाज", "राजनीति", "खेलकुद",  "मनोरंजन",  "प्रदेश"];
     const result = {};
 
     for (const cat of categories) {

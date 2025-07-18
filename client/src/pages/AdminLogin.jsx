@@ -8,17 +8,17 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // 👈 Added loading state
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const API_BASE = import.meta.env.VITE_API_URL || ""; // Vite env variable
+  const API_BASE = import.meta.env.VITE_API_URL || "";
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    console.group("AdminLogin attempt");
-    console.log("Submitting login with:", { email, password: password ? "***" : "" });
+    setLoading(true); // 👈 Start loading
 
     try {
       const res = await axios.post(
@@ -26,33 +26,23 @@ const AdminLogin = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log("Response from backend:", res);
 
       const token = res.data.token;
-      if (!token) {
-        throw new Error("No token received in response");
-      }
+      if (!token) throw new Error("No token received in response");
 
-      console.log("Received token:", token);
       login(token);
-
       toast.success("Login successful");
-      console.groupEnd();
       navigate("/admin/dashboard");
     } catch (err) {
-      console.error("Login error:", err);
-
       if (err.response) {
-        console.error("Error response data:", err.response.data);
-        setError(err.response.data.message || "Login failed with server error");
+        setError(err.response.data.message || "Login failed");
       } else if (err.request) {
-        console.error("No response received, request was:", err.request);
-        setError("No response from server. Check your network or server.");
+        setError("No response from server");
       } else {
-        console.error("Error setting up request:", err.message);
         setError(err.message);
       }
-      console.groupEnd();
+    } finally {
+      setLoading(false); // 👈 End loading
     }
   };
 
@@ -78,6 +68,7 @@ const AdminLogin = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
@@ -89,14 +80,44 @@ const AdminLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white transition ${
+            loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          Login
+          {loading ? (
+            <div className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l5-5-5-5v4a10 10 0 00-10 10h4z"
+                ></path>
+              </svg>
+              Logging in...
+            </div>
+          ) : (
+            "Login"
+          )}
         </button>
       </form>
     </div>
@@ -104,3 +125,4 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+

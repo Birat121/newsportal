@@ -4,6 +4,7 @@ import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const categories = [
   { label: "News", value: "समाचार" },
@@ -28,6 +29,8 @@ const AddNews = () => {
       trending: false,
     },
   ]);
+
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (index, field, value) => {
@@ -66,21 +69,26 @@ const AddNews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData();
-
-    // Step 1: Build the JSON data for news content
     const newsPayload = [];
+    let hasError = false;
 
-    for (let i = 0; i < newsItems.length; i++) {
-      const item = newsItems[i];
+    newsItems.forEach((item, index) => {
+      const plainTextContent = item.content.replace(/<[^>]+>/g, "").trim();
 
-      if (!item.title || !item.content || !item.category || !item.imageFile) {
-        toast.error(`Please fill all fields for news #${i + 1}`);
+      if (
+        !item.title.trim() ||
+        !plainTextContent ||
+        !item.category ||
+        !item.imageFile
+      ) {
+        toast.error(`❌ Please fill all fields for News #${index + 1}`);
+        hasError = true;
         return;
       }
 
-      // Push all non-file fields into a plain JS object
       newsPayload.push({
         title: item.title,
         content: item.content,
@@ -88,14 +96,16 @@ const AddNews = () => {
         trending: item.trending,
       });
 
-      // Append file separately as part of `images[]`
       formData.append("images", item.imageFile);
+    });
+
+    if (hasError) {
+      setLoading(false);
+      return;
     }
 
-    // Step 2: Attach the JSON string of news data
     formData.append("newsData", JSON.stringify(newsPayload));
 
-    // Step 3: Submit the form
     try {
       await api.post("/api/news/multiple", formData, {
         headers: {
@@ -109,6 +119,8 @@ const AddNews = () => {
     } catch (err) {
       toast.error("❌ Failed to add news");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -172,7 +184,9 @@ const AddNews = () => {
                 <ReactQuill
                   theme="snow"
                   value={item.content}
-                  onChange={(value) => handleInputChange(idx, "content", value)}
+                  onChange={(value) =>
+                    handleInputChange(idx, "content", value)
+                  }
                   className="bg-white"
                 />
               </div>
@@ -222,9 +236,12 @@ const AddNews = () => {
           <div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 mt-6 rounded hover:bg-blue-700 transition"
+              disabled={loading}
+              className={`bg-blue-600 text-white px-6 py-2 mt-6 rounded transition ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+              }`}
             >
-              Submit News Articles
+              {loading ? "Submitting..." : "Submit News Articles"}
             </button>
           </div>
         </form>
@@ -234,3 +251,4 @@ const AddNews = () => {
 };
 
 export default AddNews;
+

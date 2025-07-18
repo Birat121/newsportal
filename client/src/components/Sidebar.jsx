@@ -1,5 +1,5 @@
 // src/components/Sidebar.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/api";
@@ -9,6 +9,7 @@ const Sidebar = () => {
   const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // logout loading state
 
   const links = [
     { name: "Dashboard", path: "/admin/dashboard" },
@@ -19,15 +20,17 @@ const Sidebar = () => {
   ];
 
   const handleLogout = async () => {
+    setLoading(true);
     try {
       await api.post("/api/admin/logout", null, { withCredentials: true });
-
-      logout(); // Clear auth state
+      logout();
       toast.success("Logged out successfully");
       navigate("/adminLogin");
     } catch (error) {
       console.error(error);
       toast.error("Logout failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,9 +52,14 @@ const Sidebar = () => {
 
       <button
         onClick={handleLogout}
-        className="mt-auto bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded transition"
+        disabled={loading}
+        className={`mt-auto px-3 py-2 rounded transition ${
+          loading
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-red-600 hover:bg-red-700"
+        }`}
       >
-        Logout
+        {loading ? "Logging out..." : "Logout"}
       </button>
     </div>
   );

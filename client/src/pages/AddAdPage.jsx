@@ -7,6 +7,7 @@ const AddAdPage = () => {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [adTitle, setAdTitle] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -18,7 +19,7 @@ const AddAdPage = () => {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
     } else {
-      toast.error("Please select an image or GIF file.");
+      toast.error("❌ Please select a valid image or GIF file.");
       setFile(null);
       setPreviewUrl(null);
     }
@@ -28,13 +29,15 @@ const AddAdPage = () => {
     e.preventDefault();
 
     if (!file) {
-      toast.error("Please select an image or GIF file.");
+      toast.error("❌ Please select an image or GIF file.");
       return;
     }
 
     const formData = new FormData();
     formData.append("adFile", file);
     formData.append("title", adTitle);
+
+    setLoading(true);
 
     try {
       const res = await api.post("/api/ads/uploadAd", formData, {
@@ -43,13 +46,16 @@ const AddAdPage = () => {
 
       toast.success("✅ Ad uploaded successfully.");
       console.log(res.data);
+
+      // Reset form
       setFile(null);
       setPreviewUrl(null);
       setAdTitle("");
     } catch (err) {
       console.error("Upload error:", err.response?.data || err.message);
-
       toast.error("❌ Failed to upload ad.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,9 +69,7 @@ const AddAdPage = () => {
           </h2>
 
           <form onSubmit={handleSubmit}>
-            <label className="block mb-2 font-medium">
-              Ad Title (optional)
-            </label>
+            <label className="block mb-2 font-medium">Ad Title (optional)</label>
             <input
               type="text"
               value={adTitle}
@@ -74,9 +78,7 @@ const AddAdPage = () => {
               placeholder="Enter ad title"
             />
 
-            <label className="block mb-2 font-medium">
-              Upload Image or GIF
-            </label>
+            <label className="block mb-2 font-medium">Upload Image or GIF</label>
             <input
               type="file"
               accept="image/gif,image/*"
@@ -97,9 +99,14 @@ const AddAdPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              disabled={loading}
+              className={`w-full text-white py-2 rounded transition ${
+                loading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Submit Ad
+              {loading ? "Uploading..." : "Submit Ad"}
             </button>
           </form>
         </div>

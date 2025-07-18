@@ -12,20 +12,23 @@ const EditAdPage = () => {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
+  // Fetch ad data
   useEffect(() => {
     const fetchAd = async () => {
       try {
         const res = await api.get(`/api/ads/getAd/${id}`);
         setDescription(res.data.description || "");
-        setPreviewUrl(res.data.imageUrl || null); // existing image preview
+        setPreviewUrl(res.data.imageUrl || null); // Existing image
       } catch (err) {
-        toast.error("Failed to fetch ad data");
+        toast.error("❌ Failed to fetch ad data");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchAd();
   }, [id]);
 
@@ -38,36 +41,38 @@ const EditAdPage = () => {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
     } else {
-      toast.error("Please select an image or GIF file.");
+      toast.error("❌ Please select a valid image or GIF file.");
       setFile(null);
-      // keep old previewUrl if any, because image is required
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation: image is required (either existing preview or new file)
     if (!previewUrl && !file) {
-      toast.error("Image is required.");
+      toast.error("❌ Image is required.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("description", description); // optional
+    formData.append("description", description);
     if (file) {
       formData.append("adFile", file);
     }
 
+    setUpdating(true);
     try {
       await api.put(`/api/ads/updateAd/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Ad updated successfully");
-      
+
+      toast.success("✅ Ad updated successfully.");
+      navigate("/admin/ad-list"); // or wherever your ad list route is
     } catch (err) {
-      toast.error("Failed to update ad");
+      toast.error("❌ Failed to update ad.");
       console.error(err);
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -114,9 +119,14 @@ const EditAdPage = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            disabled={updating}
+            className={`w-full text-white py-2 rounded transition ${
+              updating
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Update Ad
+            {updating ? "Updating..." : "Update Ad"}
           </button>
         </form>
       </main>

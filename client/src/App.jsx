@@ -17,7 +17,7 @@ import EditNews from "./pages/EditNews";
 import AddAdPage from "./pages/AddAdPage";
 import AdListPage from "./pages/AdList";
 import EditAdPage from "./pages/EditAdPage";
-import AdminLogout from "./components/AdminLogout";
+
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -120,14 +120,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/admin/logout"
-          element={
-            <PrivateRoute>
-              <AdminLogout />
-            </PrivateRoute>
-          }
-        />
+        
 
         {/* 404 Fallback */}
         <Route

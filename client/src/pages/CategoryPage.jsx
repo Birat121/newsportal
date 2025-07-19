@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
 
 const stripHtml = (html) => {
@@ -21,6 +22,8 @@ const CategoryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 5;
+
+  const formattedCategory = formatCategoryName(slug);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -47,9 +50,17 @@ const CategoryPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        {formatCategoryName(slug)}
-      </h1>
+      {/* 🔍 SEO Meta Tags */}
+      <Helmet>
+        <title>{formattedCategory} News - Nepali News Portal</title>
+        <meta
+          name="description"
+          content={`Read the latest ${formattedCategory} news in Nepali. Find trending updates and in-depth stories related to ${formattedCategory}.`}
+        />
+        <link rel="canonical" href={`https://meronazar.netlify.app/category/${slug}`} />
+      </Helmet>
+
+      <h1 className="text-3xl font-bold mb-6 text-center">{formattedCategory}</h1>
 
       {loading ? (
         <p className="text-center">Loading...</p>
@@ -57,7 +68,7 @@ const CategoryPage = () => {
         <p className="text-center">No news found in this category.</p>
       ) : (
         <>
-          <div className="space-y-6">
+          <section className="space-y-6" aria-label={`${formattedCategory} news list`}>
             {newsList.map((news) => (
               <Link
                 to={`/news/${news._id}`}
@@ -69,15 +80,15 @@ const CategoryPage = () => {
                   alt={news.title}
                   className="w-full h-60 object-cover rounded mb-4"
                 />
-                <h3 className="text-xl font-bold mb-2">{news.title}</h3>
+                <h2 className="text-xl font-bold mb-2">{news.title}</h2>
                 <p className="text-gray-700 text-sm">
                   {stripHtml(news.content).substring(0, 100)}...
                 </p>
               </Link>
             ))}
-          </div>
+          </section>
 
-          <div className="mt-8 flex justify-center items-center gap-4">
+          <nav className="mt-8 flex justify-center items-center gap-4" aria-label="pagination">
             <button
               onClick={handlePrev}
               disabled={currentPage === 1}
@@ -97,7 +108,7 @@ const CategoryPage = () => {
             >
               Next
             </button>
-          </div>
+          </nav>
         </>
       )}
     </div>
@@ -105,5 +116,3 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
-
-

@@ -33,6 +33,7 @@ const EditNews = () => {
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false); // 🔥 For update loader
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -95,6 +96,7 @@ const EditNews = () => {
     }
 
     try {
+      setUpdating(true); // 🔥 Start updating loader
       await api.put(`/api/news/updateNews/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -104,6 +106,8 @@ const EditNews = () => {
     } catch (err) {
       toast.error("❌ Failed to update news");
       console.error(err);
+    } finally {
+      setUpdating(false); // 🔥 Stop updating loader
     }
   };
 
@@ -192,9 +196,12 @@ const EditNews = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            disabled={updating}
+            className={`${
+              updating ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600"
+            } text-white px-6 py-2 rounded transition`}
           >
-            Update News
+            {updating ? "Updating..." : "Update News"}
           </button>
         </form>
       </main>
@@ -203,4 +210,3 @@ const EditNews = () => {
 };
 
 export default EditNews;
-

@@ -1,4 +1,4 @@
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -9,21 +9,19 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">ठेगाना</h4>
             <address className="not-italic text-gray-300">
-              <p>१२३ समाचार मार्ग, काठमाडौं</p>
-              <p>नेपाल</p>
-              <p>फोन: +९७७-१-४२५६७८९</p>
-              <p>इमेल: info@newsportal.com</p>
+              <p>लेकसाइड, ६ पोखरा, नेपाल</p>
+              <p>फोन: +९७७-९८५६०३५२८९</p>
+              <p>इमेल: sevenlakemedia@gmail.com</p>
             </address>
           </div>
 
           {/* Column 2: Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">सम्पर्क</h4>
+            <h4 className="text-lg font-semibold mb-4">सम्पर्क </h4>
             <div className="text-gray-300 space-y-2">
-              <p>फोन १: +९७७-१-४१२३४५६</p>
-              <p>फोन २: +९७७-९८४१२३४५६७</p>
-              <p>इमेल १: contact@newsportal.com</p>
-              <p>इमेल २: support@newsportal.com</p>
+              <p>फोन १: +९७७-९८५६०३५२८९</p>
+              <p>फोन २: +९७७-९७४६४३५८४८</p>
+              <p>फोन ३: +९७७-९८०६७३९०७२</p>
             </div>
           </div>
 
@@ -33,7 +31,7 @@ const Footer = () => {
             <ul className="flex space-x-6">
               <li>
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/share/1MF8EMTpHm/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-2xl"
@@ -42,37 +40,38 @@ const Footer = () => {
                   <FaFacebookF />
                 </a>
               </li>
+
               <li>
                 <a
-                  href="https://twitter.com"
+                  href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-2xl"
-                  aria-label="Twitter"
+                  aria-label="TikTok"
                 >
-                  <FaTwitter />
+                  <FaTiktok />
                 </a>
               </li>
               <li>
                 <a
-                  href="https://instagram.com"
+                  href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-2xl"
-                  aria-label="Instagram"
+                  aria-label="YouTube 1"
                 >
-                  <FaInstagram />
+                  <FaYoutube />
                 </a>
               </li>
               <li>
                 <a
-                  href="https://linkedin.com"
+                  href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-white text-2xl"
-                  aria-label="LinkedIn"
+                  aria-label="YouTube 2"
                 >
-                  <FaLinkedinIn />
+                  <FaYoutube />
                 </a>
               </li>
             </ul>
@@ -92,4 +91,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

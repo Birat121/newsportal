@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { Home, Menu, X, Search } from "lucide-react";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-} from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import news from "../assets/seven.jpg";
 
@@ -32,32 +27,48 @@ export default function NewsNavbar() {
     if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm("");
-      setOpen(false); // close mobile menu if open
+      setOpen(false);
     }
   };
 
   return (
     <>
       <header className="bg-white border-b shadow-md">
-        {/* Mobile Header - Reduced padding and better spacing */}
         <div className="max-w-7xl mx-auto px-3 py-4 md:px-4 md:py-10 flex items-center relative justify-between md:justify-center">
           {/* Desktop Social Icons */}
           <div className="hidden md:flex gap-4 text-blue-700 text-xl absolute left-4">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a
+              href="https://www.facebook.com/share/1MF8EMTpHm/"
+              target="_blank"
+              rel="noreferrer"
+            >
               <FaFacebookF className="hover:text-blue-900" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">
-              <FaTwitter className="hover:text-blue-900" />
+
+            <a
+              href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaTiktok className="hover:text-black" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
-              <FaInstagram className="hover:text-pink-600" />
+            <a
+              href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaYoutube className="hover:text-red-600" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">
-              <FaLinkedinIn className="hover:text-blue-900" />
+            <a
+              href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaYoutube className="hover:text-red-600" />
             </a>
           </div>
 
-          {/* Logo and Title - Responsive sizing */}
+          {/* Logo */}
           <Link to="/" className="block flex-1 md:w-full">
             <div className="flex items-center justify-center w-full cursor-pointer">
               <img
@@ -76,7 +87,7 @@ export default function NewsNavbar() {
             </div>
           </Link>
 
-          {/* Mobile Menu Button - Better positioning */}
+          {/* Mobile Menu Icon */}
           <button
             className="md:hidden flex-shrink-0 ml-2"
             onClick={() => setOpen(true)}
@@ -114,10 +125,9 @@ export default function NewsNavbar() {
         </nav>
       </header>
 
-      {/* Mobile Menu - Improved spacing and layout */}
+      {/* Mobile Menu */}
       {open && (
         <div className="fixed inset-0 bg-white z-50 flex flex-col px-4 py-6">
-          {/* Close button with better spacing */}
           <div className="flex justify-end mb-8">
             <button
               onClick={() => setOpen(false)}
@@ -127,7 +137,6 @@ export default function NewsNavbar() {
             </button>
           </div>
 
-          {/* Navigation links with better spacing */}
           <nav className="flex flex-col gap-4 text-lg font-semibold text-gray-900 mb-8">
             {categories.map(({ name, slug, isHome }) => (
               <Link
@@ -141,7 +150,6 @@ export default function NewsNavbar() {
             ))}
           </nav>
 
-          {/* Search form with better spacing */}
           <form onSubmit={handleSearch} className="w-full">
             <div className="relative">
               <input
@@ -163,11 +171,26 @@ export default function NewsNavbar() {
             <a href="https://twitter.com" target="_blank" rel="noreferrer">
               <FaTwitter className="hover:text-blue-900" />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
-              <FaInstagram className="hover:text-pink-600" />
+            <a
+              href="https://www.tiktok.com/@yourusername"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaTiktok className="hover:text-black" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">
-              <FaLinkedinIn className="hover:text-blue-900" />
+            <a
+              href="https://www.youtube.com/channel/yourchannel1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaYoutube className="hover:text-red-600" />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/yourchannel2"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaYoutube className="hover:text-red-600" />
             </a>
           </div>
         </div>

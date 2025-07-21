@@ -7,16 +7,17 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const categories = [
-  { label: "News", value: "समाचार" },
-  { label: "Society", value: "समाज" },
-  { label: "Politics", value: "राजनीति" },
-  { label: "Local Government", value: "स्थानीय तह" },
-  { label: "Entertainment", value: "मनोरंजन" },
-  { label: "Literature", value: "साहित्य" },
-  { label: "Interview", value: "अन्तरबार्ता" },
-  { label: "Sports", value: "खेलकुद" },
-  { label: "Province", value: "प्रदेश" },
+  "समाचार",
+  "समाज",
+  "राजनीति",
+  "स्थानीय तह",
+  "मनोरंजन",
+  "साहित्य",
+  "अन्तरबार्ता",
+  "खेलकुद",
+  "प्रदेश",
 ];
+
 
 const AddNews = () => {
   const [newsItems, setNewsItems] = useState([
@@ -160,24 +161,25 @@ const AddNews = () => {
                 />
               </div>
 
-              <div>
-                <label className="block mb-1 font-medium">Category</label>
-                <select
-                  value={item.category}
-                  onChange={(e) =>
-                    handleInputChange(idx, "category", e.target.value)
-                  }
-                  className="w-full border px-3 py-2 rounded"
-                  required
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+             <div>
+  <label className="block mb-1 font-medium">Category</label>
+  <select
+    value={item.category}
+    onChange={(e) =>
+      handleInputChange(idx, "category", e.target.value)
+    }
+    className="w-full border px-3 py-2 rounded"
+    required
+  >
+    <option value="">Select Category</option>
+    {categories.map((cat) => (
+      <option key={cat} value={cat}>
+        {cat}
+      </option>
+    ))}
+  </select>
+</div>
+
 
               <div>
                 <label className="block mb-1 font-medium">Content</label>

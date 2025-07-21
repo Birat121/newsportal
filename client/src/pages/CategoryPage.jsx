@@ -45,12 +45,17 @@ const CategoryPage = () => {
     fetchNews();
   }, [slug, currentPage]);
 
-  const handlePrev = () => currentPage > 1 && setCurrentPage((p) => p - 1);
-  const handleNext = () => currentPage < totalPages && setCurrentPage((p) => p + 1);
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* 🔍 SEO Meta Tags */}
+    <main className="max-w-3xl mx-auto px-4 py-8">
+      {/* SEO Meta Tags */}
       <Helmet>
         <title>{formattedCategory} News - Nepali News Portal</title>
         <meta
@@ -60,58 +65,65 @@ const CategoryPage = () => {
         <link rel="canonical" href={`https://meronazar.netlify.app/category/${slug}`} />
       </Helmet>
 
-      <h1 className="text-3xl font-bold mb-6 text-center">{formattedCategory}</h1>
+      <header className="text-center mb-6">
+        <h1 className="text-3xl font-bold" aria-label={`Category: ${formattedCategory}`}>
+          {formattedCategory}
+        </h1>
+      </header>
 
       {loading ? (
-        <p className="text-center">Loading...</p>
+        <p className="text-center" role="status">Loading...</p>
       ) : newsList.length === 0 ? (
-        <p className="text-center">No news found in this category.</p>
+        <p className="text-center" role="alert">No news found in this category.</p>
       ) : (
         <>
           <section className="space-y-6" aria-label={`${formattedCategory} news list`}>
             {newsList.map((news) => (
-              <Link
-                to={`/news/${news._id}`}
-                key={news._id}
-                className="block bg-white rounded shadow-md p-4 hover:bg-gray-50 transition"
-              >
-                <img
-                  src={news.imageUrl}
-                  alt={news.title}
-                  className="w-full h-60 object-cover rounded mb-4"
-                />
-                <h2 className="text-xl font-bold mb-2">{news.title}</h2>
-                <p className="text-gray-700 text-sm">
-                  {stripHtml(news.content).substring(0, 100)}...
-                </p>
-              </Link>
+              <article key={news._id} className="block bg-white rounded shadow-md p-4 hover:bg-gray-50 transition">
+                <Link to={`/news/${news._id}`} aria-label={`Read more: ${news.title}`}>
+                  <img
+                    src={news.imageUrl}
+                    alt={news.title || "News Image"}
+                    loading="lazy"
+                    className="w-full h-60 object-cover rounded mb-4"
+                  />
+                  <h2 className="text-xl font-semibold mb-2">{news.title}</h2>
+                  <p className="text-gray-700 text-sm">
+                    {stripHtml(news.content).substring(0, 100)}...
+                  </p>
+                </Link>
+              </article>
             ))}
           </section>
 
-          <nav className="mt-8 flex justify-center items-center gap-4" aria-label="pagination">
+          <nav className="mt-8 flex justify-center items-center gap-4" aria-label="News pagination navigation">
             <button
               onClick={handlePrev}
               disabled={currentPage === 1}
               aria-disabled={currentPage === 1}
               className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              aria-label="Previous page"
             >
               Previous
             </button>
-            <span className="text-sm font-medium">
+
+            <span className="text-sm font-medium" aria-live="polite">
               Page {currentPage} of {totalPages}
             </span>
+
             <button
               onClick={handleNext}
               disabled={currentPage === totalPages}
               aria-disabled={currentPage === totalPages}
               className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+              aria-label="Next page"
             >
               Next
             </button>
           </nav>
         </>
       )}
-    </div>
+    </main>
   );
 };
 

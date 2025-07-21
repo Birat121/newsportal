@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { Link } from "react-router-dom";
 import api from "../utils/api";
 
@@ -17,21 +16,16 @@ const LatestNews = () => {
     const fetchLatestNews = async () => {
       try {
         const res = await api.get("/api/news/getNews");
-
-        console.log("Fetched news:", res.data);
-
         if (!Array.isArray(res.data)) {
           throw new Error("Expected an array, got: " + JSON.stringify(res.data));
         }
-
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-
-        setLatestNews(sorted.slice(0, 4)); // Show latest 4
+        setLatestNews(sorted.slice(0, 4));
       } catch (err) {
         console.error("Failed to fetch latest news:", err.message);
-        setLatestNews([]); // fallback in case of error
+        setLatestNews([]);
       } finally {
         setLoading(false);
       }
@@ -41,18 +35,35 @@ const LatestNews = () => {
   }, []);
 
   return (
-    <section className="max-w-4xl mx-auto px-4 py-10">
+    <section
+      className="max-w-4xl mx-auto px-4 py-10"
+      aria-labelledby="latest-news-heading"
+    >
+      <h2 id="latest-news-heading" className="sr-only">
+        Latest News
+      </h2>
+
       {loading ? (
-        <p className="text-center text-gray-500">Loading latest news...</p>
+        <p
+          className="text-center text-gray-500"
+          role="status"
+          aria-live="polite"
+        >
+          Loading latest news...
+        </p>
       ) : latestNews.length === 0 ? (
-        <p className="text-center text-gray-500">No news articles found.</p>
+        <p className="text-center text-gray-500" role="alert">
+          No news articles found.
+        </p>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6" role="list">
           {latestNews.map((news) => (
             <Link
               key={news._id}
               to={`/news/${news._id}`}
               className="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden flex flex-col"
+              role="listitem"
+              aria-label={`Read more: ${news.title}`}
             >
               <img
                 src={news.imageUrl || "/fallback-image.jpg"}
@@ -68,7 +79,6 @@ const LatestNews = () => {
                     ? stripHtmlTags(news.content).substring(0, 150) + "..."
                     : stripHtmlTags(news.content)}
                 </p>
-                
               </div>
             </Link>
           ))}

@@ -7,16 +7,15 @@ export default function TrendingCarousel() {
   const [trendingNews, setTrendingNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Calculate dynamic settings based on trendingNews length
   const slidesToShowCount = Math.min(3, trendingNews.length);
 
   const settings = {
     dots: false,
-    infinite: trendingNews.length > 3, // infinite only if more than 3 items
+    infinite: trendingNews.length > 3,
     speed: 700,
     slidesToShow: slidesToShowCount,
     slidesToScroll: 1,
-    autoplay: trendingNews.length > 1, // autoplay only if more than 1 slide
+    autoplay: trendingNews.length > 1,
     autoplaySpeed: 3500,
     responsive: [
       {
@@ -50,32 +49,40 @@ export default function TrendingCarousel() {
     fetchTrending();
   }, []);
 
+  const Heading = () => (
+    <h2 id="trending-heading" className="text-2xl font-bold mb-4">
+      🔥 Trending Now
+    </h2>
+  );
+
   if (loading) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-10">
-        <h2 className="text-2xl font-bold mb-4">🔥 Trending Now</h2>
-        <p>Loading...</p>
+      <section className="max-w-7xl mx-auto px-4 py-10" aria-labelledby="trending-heading">
+        <Heading />
+        <p role="status" aria-live="polite">Loading...</p>
       </section>
     );
   }
 
   if (trendingNews.length === 0) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-10">
-        <h2 className="text-2xl font-bold mb-4">🔥 Trending Now</h2>
-        <p>No trending news available.</p>
+      <section className="max-w-7xl mx-auto px-4 py-10" aria-labelledby="trending-heading">
+        <Heading />
+        <p role="alert">No trending news available.</p>
       </section>
     );
   }
 
-  // If only one news item, show without slider
   if (trendingNews.length === 1) {
     const news = trendingNews[0];
     return (
-      <section className="max-w-7xl mx-auto px-4 py-10">
-        <h2 className="text-2xl font-bold mb-4">🔥 Trending Now</h2>
-        <Link to={`/news/${news._id}`}>
-          <div className="bg-white shadow-lg rounded overflow-hidden hover:shadow-xl transition max-w-md mx-auto">
+      <section className="max-w-7xl mx-auto px-4 py-10" aria-labelledby="trending-heading">
+        <Heading />
+        <Link to={`/news/${news._id}`} aria-label={`Read more about ${news.title}`}>
+          <div
+            className="bg-white shadow-lg rounded overflow-hidden hover:shadow-xl transition max-w-md mx-auto"
+            role="article"
+          >
             <img
               src={news.imageUrl}
               alt={news.title}
@@ -95,14 +102,19 @@ export default function TrendingCarousel() {
     );
   }
 
-  // For 2 or more items, render slider
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-2xl font-bold mb-4">🔥 Trending Now</h2>
+    <section
+      className="max-w-7xl mx-auto px-4 py-10"
+      aria-labelledby="trending-heading"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Trending News Carousel"
+    >
+      <Heading />
       <Slider {...settings}>
-        {trendingNews.map((news) => (
-          <div key={news._id} className="px-2">
-            <Link to={`/news/${news._id}`}>
+        {trendingNews.map((news, index) => (
+          <div key={news._id} className="px-2" role="group" aria-roledescription="slide" aria-label={`Slide ${index + 1} of ${trendingNews.length}`}>
+            <Link to={`/news/${news._id}`} aria-label={`Read more about ${news.title}`}>
               <div className="bg-white shadow-lg rounded overflow-hidden hover:shadow-xl transition">
                 <img
                   src={news.imageUrl}

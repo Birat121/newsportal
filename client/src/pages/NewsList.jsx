@@ -42,7 +42,7 @@ const NewsList = () => {
     if (!selectedNewsId) return;
 
     try {
-      await axios.delete(`/api/news/deleteNews/${selectedNewsId}`);
+      await api.delete(`/api/news/deleteNews/${selectedNewsId}`);
       setNewsList(newsList.filter((news) => news._id !== selectedNewsId));
       toast.success("✅ News deleted");
     } catch (err) {

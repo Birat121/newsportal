@@ -33,7 +33,8 @@ export default function NewsNavbar() {
 
   return (
     <>
-      <header className="bg-white border-b shadow-md">
+      {/* Mobile fixed top header */}
+      <header className="bg-white border-b shadow-md fixed top-0 left-0 w-full z-50 md:relative md:z-0">
         <div className="max-w-7xl mx-auto px-3 py-4 md:px-4 md:py-10 flex items-center relative justify-between md:justify-center">
           {/* Desktop Social Icons */}
           <div className="hidden md:flex gap-4 text-blue-700 text-xl absolute left-4">
@@ -95,39 +96,42 @@ export default function NewsNavbar() {
             <Menu className="h-6 w-6 text-gray-800" />
           </button>
         </div>
-
-        {/* Desktop Navigation */}
-        <nav className="bg-[#0B1E3C] text-white hidden md:flex justify-between items-center px-6 py-4">
-          <div className="flex flex-wrap gap-6 text-xl font-medium items-center">
-            {categories.map(({ name, slug, isHome }) => (
-              <Link
-                key={slug}
-                to={`/${slug}`}
-                className="hover:text-blue-50 transition duration-150 flex items-center gap-1"
-              >
-                {isHome ? <Home className="h-5 w-5" /> : name}
-              </Link>
-            ))}
-          </div>
-
-          <form onSubmit={handleSearch} className="flex items-center gap-3">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search news..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="px-4 py-2 rounded-full text-sm text-black bg-white pr-10 w-48"
-              />
-              <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
-            </div>
-          </form>
-        </nav>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Sticky category nav bar (desktop only) */}
+      <nav className="bg-[#0B1E3C] text-white hidden md:flex justify-between items-center px-6 py-4 sticky top-0 z-40 shadow-md">
+        <div className="flex flex-wrap gap-6 text-xl font-medium items-center">
+          {categories.map(({ name, slug, isHome }) => (
+            <Link
+              key={slug}
+              to={`/${slug}`}
+              className="hover:text-blue-50 transition duration-150 flex items-center gap-1"
+            >
+              {isHome ? <Home className="h-5 w-5" /> : name}
+            </Link>
+          ))}
+        </div>
+
+        <form onSubmit={handleSearch} className="flex items-center gap-3">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search news..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-4 py-2 rounded-full text-sm text-black bg-white pr-10 w-48"
+            />
+            <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-500" />
+          </div>
+        </form>
+      </nav>
+
+      {/* Spacer for mobile fixed header */}
+      <div className="h-[76px] md:hidden" />
+
+      {/* Mobile Menu Overlay */}
       {open && (
-        <div className="fixed inset-0 bg-white z-50 flex flex-col px-4 py-6">
+        <div className="fixed inset-0 bg-white z-50 flex flex-col px-4 py-6 overflow-y-auto">
           <div className="flex justify-end mb-8">
             <button
               onClick={() => setOpen(false)}

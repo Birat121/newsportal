@@ -169,28 +169,26 @@ export default function NewsNavbar() {
 
           {/* Mobile Social Icons */}
           <div className="flex justify-center gap-6 text-blue-700 text-2xl mt-8">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/share/1MF8EMTpHm/" target="_blank" rel="noreferrer">
               <FaFacebookF className="hover:text-blue-900" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">
-              <FaTwitter className="hover:text-blue-900" />
-            </a>
+            
             <a
-              href="https://www.tiktok.com/@yourusername"
+              href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"
               target="_blank"
               rel="noreferrer"
             >
               <FaTiktok className="hover:text-black" />
             </a>
             <a
-              href="https://www.youtube.com/channel/yourchannel1"
+              href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW"
               target="_blank"
               rel="noreferrer"
             >
               <FaYoutube className="hover:text-red-600" />
             </a>
             <a
-              href="https://www.youtube.com/channel/yourchannel2"
+              href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF"
               target="_blank"
               rel="noreferrer"
             >

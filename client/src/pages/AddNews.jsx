@@ -18,7 +18,6 @@ const categories = [
   "प्रदेश",
 ];
 
-
 const AddNews = () => {
   const [newsItems, setNewsItems] = useState([
     {
@@ -161,46 +160,54 @@ const AddNews = () => {
                 />
               </div>
 
-             <div>
-  <label className="block mb-1 font-medium">Category</label>
-  <select
-    value={item.category}
-    onChange={(e) =>
-      handleInputChange(idx, "category", e.target.value)
-    }
-    className="w-full border px-3 py-2 rounded"
-    required
-  >
-    <option value="">Select Category</option>
-    {categories.map((cat) => (
-      <option key={cat} value={cat}>
-        {cat}
-      </option>
-    ))}
-  </select>
-</div>
-
+              <div>
+                <label className="block mb-1 font-medium">Category</label>
+                <select
+                  value={item.category}
+                  onChange={(e) =>
+                    handleInputChange(idx, "category", e.target.value)
+                  }
+                  className="w-full border px-3 py-2 rounded"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               <div>
                 <label className="block mb-1 font-medium">Content</label>
                 <ReactQuill
                   theme="snow"
                   value={item.content}
-                  onChange={(value) =>
-                    handleInputChange(idx, "content", value)
-                  }
+                  onChange={(value) => handleInputChange(idx, "content", value)}
                   className="bg-white"
                 />
               </div>
 
               <div>
                 <label className="block mb-1 font-medium">Upload Image</label>
+
+                <label
+                  htmlFor={`image-upload-${idx}`}
+                  className="block w-full cursor-pointer border border-gray-300 rounded-md p-3 text-center hover:bg-gray-100 transition"
+                >
+                  Click here to choose an image
+                </label>
+
                 <input
+                  id={`image-upload-${idx}`}
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleFileChange(idx, e.target.files[0])}
                   required
+                  className="hidden"
                 />
+
                 {item.previewUrl && (
                   <img
                     src={item.previewUrl}
@@ -253,4 +260,3 @@ const AddNews = () => {
 };
 
 export default AddNews;
-

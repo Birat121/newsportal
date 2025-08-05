@@ -57,12 +57,12 @@ const CategoryPage = () => {
     <main className="max-w-3xl mx-auto px-4 py-8">
       {/* SEO Meta Tags */}
       <Helmet>
-        <title>{formattedCategory} News - Nepali News Portal</title>
+        <title>{formattedCategory} News - Seven Lake News</title>
         <meta
           name="description"
           content={`Read the latest ${formattedCategory} news in Nepali. Find trending updates and in-depth stories related to ${formattedCategory}.`}
         />
-        <link rel="canonical" href={`https://meronazar.netlify.app/category/${slug}`} />
+        <link rel="canonical" href={`https://sevenlakenews.com/category/${slug}`} />
       </Helmet>
 
       <header className="text-center mb-6">

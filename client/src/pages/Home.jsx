@@ -11,12 +11,12 @@ const Home = () => {
     <>
       {/* 🔍 SEO Meta Tags */}
       <Helmet>
-        <title>Nepali News Portal - ताजा र ट्रेन्डिङ समाचार</title>
+        <title>Seven Lake News - ताजा र ट्रेन्डिङ समाचार</title>
         <meta
           name="description"
           content="पढ्नुहोस् नेपालको ताजा समाचार, ट्रेन्डिङ समाचार, र विभिन्न श्रेणी अनुसार समाचारहरू। सबै समाचार एकै ठाँउमा।"
         />
-        <link rel="canonical" href="https://meronazar.netlify.app/" />
+        <link rel="canonical" href="https://sevenlakenews.com/" />
       </Helmet>
 
       {/* ✅ Latest News with Ad Sidebar */}

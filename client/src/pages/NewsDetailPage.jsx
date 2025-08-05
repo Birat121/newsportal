@@ -2,56 +2,25 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
-import NepaliDate from "nepali-date";
-
-// Nepali digit map
-const nepaliDigits = {
-  0: "०", 1: "१", 2: "२", 3: "३", 4: "४",
-  5: "५", 6: "६", 7: "७", 8: "८", 9: "९",
-};
-
-const toNepaliNumber = (num) =>
-  num.toString().split("").map((d) => nepaliDigits[d] || d).join("");
-
-const getTimePeriod = (hour) => {
-  if (hour < 4) return "मध्यरात";
-  if (hour < 12) return "बिहान";
-  if (hour < 17) return "दिउँसो";
-  if (hour < 20) return "साँझ";
-  return "राति";
-};
-
-const nepaliMonths = [
-  "बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "आश्विन",
-  "कार्तिक", "मंसिर", "पौष", "माघ", "फाल्गुण", "चैत्र"
-];
-
-const toNepalTime = (isoDate) => {
-  const date = new Date(isoDate);
-  const nptOffsetMs = 5 * 60 * 60 * 1000 + 45 * 60 * 1000;
-  const utc = date.getTime() + date.getTimezoneOffset() * 60000;
-  return new Date(utc + nptOffsetMs);
-};
-
-const formatNepaliDate = (isoDate) => {
-  const adDate = toNepalTime(isoDate);
-  const bsDate = new NepaliDate(adDate);
-  const hour = adDate.getHours();
-  const minute = adDate.getMinutes();
-  const hour12 = hour % 12 || 12;
-  const nepaliMonth = nepaliMonths[bsDate.getMonth()];
-  return `${toNepaliNumber(bsDate.getDate())} ${nepaliMonth} ${toNepaliNumber(
-    bsDate.getYear()
-  )}, ${getTimePeriod(hour)} ${toNepaliNumber(hour12)}:${toNepaliNumber(
-    minute.toString().padStart(2, "0")
-  )} बजे`;
-};
 
 // 🧠 Helper to strip plain text from HTML for meta description
 const getPlainText = (html) => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || "";
+};
+
+// 📅 Format date to English with Kathmandu timezone
+const formatEnglishDate = (isoDate) => {
+  return new Date(isoDate).toLocaleString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kathmandu",
+  });
 };
 
 const NewsDetailPage = () => {
@@ -87,7 +56,7 @@ const NewsDetailPage = () => {
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
         <link rel="canonical" href={`https://meronazar.netlify.app/news/${id}`} />
-        {/* Optional: Open Graph Meta */}
+        {/* Open Graph Meta */}
         <meta property="og:title" content={news.title} />
         <meta property="og:description" content={plainText} />
         <meta property="og:image" content={news.imageUrl} />
@@ -115,7 +84,7 @@ const NewsDetailPage = () => {
 
         <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 flex items-center gap-1">
           <span className="text-sm">📅</span>
-          <span>{formatNepaliDate(news.createdAt)}</span>
+          <span>{formatEnglishDate(news.createdAt)}</span>
         </p>
 
         <div className="mb-6 sm:mb-8 lg:mb-10">

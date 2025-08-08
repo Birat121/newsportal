@@ -234,7 +234,7 @@ export async function getSharePreview(req, res) {
     if (!news) return res.status(404).send("News not found");
 
     const description = news.content.replace(/<[^>]*>/g, "").substring(0, 160); // strip HTML
-    const fullUrl = `https://sevenlakenews.com/news/${news._id}`; // Your React frontend link
+    const fullUrl = `https://sevenlakenews.com/news/${news._id}`; // React frontend link
 
     const html = `
       <!DOCTYPE html>
@@ -243,7 +243,7 @@ export async function getSharePreview(req, res) {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>${news.title}</title>
-        
+
         <!-- Open Graph -->
         <meta property="og:title" content="${news.title}" />
         <meta property="og:description" content="${description}" />
@@ -251,8 +251,8 @@ export async function getSharePreview(req, res) {
         <meta property="og:url" content="${fullUrl}" />
         <meta property="og:type" content="article" />
 
-        <!-- Redirect for normal users -->
-        <meta http-equiv="refresh" content="0; url=${fullUrl}" />
+        <!-- Redirect after 1 second -->
+        <meta http-equiv="refresh" content="1; url=${fullUrl}" />
       </head>
       <body>
         <p>Redirecting to <a href="${fullUrl}">${fullUrl}</a></p>
@@ -260,6 +260,7 @@ export async function getSharePreview(req, res) {
       </html>
     `;
 
+    res.setHeader("Content-Type", "text/html");
     res.send(html);
   } catch (err) {
     console.error("Share preview error:", err);

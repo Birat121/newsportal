@@ -2,15 +2,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
+import { FaFacebookSquare } from "react-icons/fa"; // Facebook icon
 
-// 🧠 Helper to strip plain text from HTML for meta description
 const getPlainText = (html) => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || "";
 };
 
-// 📅 Format date to English with Kathmandu timezone
 const formatEnglishDate = (isoDate) => {
   return new Date(isoDate).toLocaleString("en-GB", {
     year: "numeric",
@@ -48,19 +47,25 @@ const NewsDetailPage = () => {
     return <p className="text-center py-10 text-red-600">News not found.</p>;
 
   const plainText = getPlainText(news.content).substring(0, 160);
+  const articleUrl = `https://sevenlakenews.com/news/${id}`;
+  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share/${id}`; // 🧠 replace with your deployed backend domain
+
+  const handleFacebookShare = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePreviewUrl)}`;
+    window.open(facebookUrl, "_blank", "width=600,height=400");
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
-      {/* 🔍 SEO Meta Tags */}
+      {/* 🔍 SEO Meta Tags for browser & crawlers */}
       <Helmet>
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
-        <link rel="canonical" href={`https://meronazar.netlify.app/news/${id}`} />
-        {/* Open Graph Meta */}
+        <link rel="canonical" href={articleUrl} />
         <meta property="og:title" content={news.title} />
         <meta property="og:description" content={plainText} />
         <meta property="og:image" content={news.imageUrl} />
-        <meta property="og:url" content={`https://meronazar.netlify.app/news/${id}`} />
+        <meta property="og:url" content={articleUrl} />
         <meta property="og:type" content="article" />
       </Helmet>
 
@@ -106,9 +111,23 @@ const NewsDetailPage = () => {
           prose-a:text-blue-600 prose-a:hover:text-blue-800"
           dangerouslySetInnerHTML={{ __html: news.content }}
         ></div>
+
+        {/* Share Button */}
+        <div className="flex items-center gap-4 mt-6">
+          <button
+            onClick={handleFacebookShare}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-md transition"
+            aria-label="Share this article on Facebook"
+          >
+            <FaFacebookSquare size={24} />
+            <span>Share on Facebook</span>
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default NewsDetailPage;
+
+

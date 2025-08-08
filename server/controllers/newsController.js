@@ -225,3 +225,44 @@ export const getDashboardStats = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+// GET /api/news/share/:id
+export async function getSharePreview(req, res) {
+  try {
+    const news = await News.findById(req.params.id);
+    if (!news) return res.status(404).send("News not found");
+
+    const description = news.content.replace(/<[^>]*>/g, "").substring(0, 160); // strip HTML
+    const fullUrl = `https://sevenlakenews.com/news/${news._id}`; // Your React frontend link
+
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>${news.title}</title>
+        
+        <!-- Open Graph -->
+        <meta property="og:title" content="${news.title}" />
+        <meta property="og:description" content="${description}" />
+        <meta property="og:image" content="${news.imageUrl}" />
+        <meta property="og:url" content="${fullUrl}" />
+        <meta property="og:type" content="article" />
+
+        <!-- Redirect for normal users -->
+        <meta http-equiv="refresh" content="0; url=${fullUrl}" />
+      </head>
+      <body>
+        <p>Redirecting to <a href="${fullUrl}">${fullUrl}</a></p>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  } catch (err) {
+    console.error("Share preview error:", err);
+    res.status(500).send("Internal Server Error");
+  }
+}

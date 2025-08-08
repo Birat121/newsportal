@@ -10,7 +10,8 @@ import {
   getNewsByCategory,
   getNewsByCategoryGroup,
   getTrendingNews,
-  getDashboardStats
+  getDashboardStats,
+  getSharePreview
 } from "../controllers/newsController.js";
 
 const newsRouter = express.Router();
@@ -31,5 +32,6 @@ newsRouter.get("/category/:slug", getNewsByCategory);
 newsRouter.get("/category-section", getNewsByCategoryGroup);
 newsRouter.get("/trending", getTrendingNews);
 newsRouter.get("/stats", getDashboardStats);
+newsRouter.get("/share-preview/:id", getSharePreview);
 
 export default newsRouter;

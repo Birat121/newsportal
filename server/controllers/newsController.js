@@ -262,9 +262,7 @@ export async function getSharePreview(req, res) {
         <!-- Redirect after 1 second -->
         <meta http-equiv="refresh" content="1; url=${fullUrl}" />
       </head>
-      <body>
-        <p>Redirecting to <a href="${fullUrl}">${fullUrl}</a></p>
-      </body>
+     
       </html>
     `;
 

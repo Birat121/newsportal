@@ -233,13 +233,9 @@ export async function getSharePreview(req, res) {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).send("News not found");
 
-    // Strip HTML tags and truncate description to 160 chars
     const description = news.content.replace(/<[^>]*>/g, "").substring(0, 160);
-
-    // Your React frontend URL for the news article
     const fullUrl = `https://sevenlakenews.com/news/${news._id}`;
 
-    // Ensure imageUrl is an absolute URL (prepend backend domain if relative)
     const imageUrl = news.imageUrl.startsWith("http")
       ? news.imageUrl
       : `https://newsportal-pl6g.onrender.com${news.imageUrl}`;
@@ -252,17 +248,21 @@ export async function getSharePreview(req, res) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>${news.title}</title>
 
-        <!-- Open Graph Meta Tags -->
+        <!-- Open Graph -->
         <meta property="og:title" content="${news.title}" />
         <meta property="og:description" content="${description}" />
         <meta property="og:image" content="${imageUrl}" />
         <meta property="og:url" content="${fullUrl}" />
         <meta property="og:type" content="article" />
 
-        <!-- Redirect after 1 second -->
-        <meta http-equiv="refresh" content="1; url=${fullUrl}" />
+        <!-- Redirect after 3 seconds -->
+        <meta http-equiv="refresh" content="3; url=${fullUrl}" />
       </head>
-     
+      <body>
+        <h1>${news.title}</h1>
+        <p>${description}</p>
+        <p>You will be redirected shortly. If not, <a href="${fullUrl}">click here</a>.</p>
+      </body>
       </html>
     `;
 
@@ -273,3 +273,4 @@ export async function getSharePreview(req, res) {
     res.status(500).send("Internal Server Error");
   }
 }
+

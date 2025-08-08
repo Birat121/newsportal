@@ -48,7 +48,7 @@ const NewsDetailPage = () => {
 
   const plainText = getPlainText(news.content).substring(0, 160);
   const articleUrl = `https://sevenlakenews.com/news/${id}`;
-  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share/${id}`; // 🧠 replace with your deployed backend domain
+  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share-preview/${id}`; // 🧠 replace with your deployed backend domain
 
   const handleFacebookShare = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePreviewUrl)}`;

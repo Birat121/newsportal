@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
 import { FaFacebookSquare } from "react-icons/fa"; // Facebook icon
 
+// Remove HTML tags from content
 const getPlainText = (html) => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
@@ -46,18 +47,24 @@ const NewsDetailPage = () => {
   if (!news)
     return <p className="text-center py-10 text-red-600">News not found.</p>;
 
-  const plainText = getPlainText(news.content).substring(0, 160);
+  const plainText = getPlainText(news.content || "").substring(0, 160);
+
+  // Public React article URL
   const articleUrl = `https://sevenlakenews.com/news/${id}`;
-  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share-preview/${id}`; // 🧠 replace with your deployed backend domain
+
+  // Backend share-preview URL (so FB gets correct OG tags)
+  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share-preview/${id}`;
 
   const handleFacebookShare = () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePreviewUrl)}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      sharePreviewUrl
+    )}`;
     window.open(facebookUrl, "_blank", "width=600,height=400");
   };
 
   return (
     <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
-      {/* 🔍 SEO Meta Tags for browser & crawlers */}
+      {/* ✅ Meta tags for browsers (not FB) */}
       <Helmet>
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
@@ -112,7 +119,7 @@ const NewsDetailPage = () => {
           dangerouslySetInnerHTML={{ __html: news.content }}
         ></div>
 
-        {/* Share Button */}
+        {/* ✅ Share Button */}
         <div className="flex items-center gap-4 mt-6">
           <button
             onClick={handleFacebookShare}

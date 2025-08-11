@@ -233,41 +233,50 @@ export async function getSharePreview(req, res) {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).send("News not found");
 
-    // Strip HTML tags and truncate description to 160 chars
-    const description = news.content.replace(/<[^>]*>/g, "").substring(0, 160);
+    // Remove HTML tags from content and limit description length
+    const description = news.content
+      ? news.content.replace(/<[^>]*>/g, "").substring(0, 160)
+      : "";
 
-    // Your React frontend URL for the news article
+    // Public URL for the article
     const fullUrl = `https://sevenlakenews.com/news/${news._id}`;
 
-    // Ensure imageUrl is an absolute URL (prepend backend domain if relative)
-    const imageUrl = news.imageUrl.startsWith("http")
+    // Ensure the image URL is absolute
+    const imageUrl = news.imageUrl?.startsWith("http")
       ? news.imageUrl
       : `https://newsportal-pl6g.onrender.com${news.imageUrl}`;
 
-    const html = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>${news.title}</title>
+    // Detect Facebook or other crawlers via User-Agent
+    const userAgent = req.headers["user-agent"] || "";
+    const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot/i.test(userAgent);
 
-        <!-- Open Graph Meta Tags -->
-        <meta property="og:title" content="${news.title}" />
-        <meta property="og:description" content="${description}" />
-        <meta property="og:image" content="${imageUrl}" />
-        <meta property="og:url" content="${fullUrl}" />
-        <meta property="og:type" content="article" />
+    // If it's a bot, send HTML with OG tags (no JS)
+    if (isCrawler) {
+      const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>${news.title}</title>
 
-        <!-- Redirect after 1 second -->
-        <meta http-equiv="refresh" content="1; url=${fullUrl}" />
-      </head>
-     
-      </html>
-    `;
+          <!-- Open Graph Meta Tags -->
+          <meta property="og:title" content="${news.title}" />
+          <meta property="og:description" content="${description}" />
+          <meta property="og:image" content="${imageUrl}" />
+          <meta property="og:url" content="${fullUrl}" />
+          <meta property="og:type" content="article" />
+        </head>
+        <body></body>
+        </html>
+      `;
+      res.setHeader("Content-Type", "text/html");
+      return res.send(html);
+    }
 
-    res.setHeader("Content-Type", "text/html");
-    res.send(html);
+    // If it's a normal browser, just redirect to React frontend
+    return res.redirect(fullUrl);
+
   } catch (err) {
     console.error("Share preview error:", err);
     res.status(500).send("Internal Server Error");

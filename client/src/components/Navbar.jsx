@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Home, Menu, X, Search } from "lucide-react";
-import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok, FaInstagram } from "react-icons/fa"; // ✅ Added Instagram
 import { Link, useNavigate } from "react-router-dom";
 import news from "../assets/seven.jpg";
 
@@ -38,33 +38,22 @@ export default function NewsNavbar() {
         <div className="max-w-7xl mx-auto px-3 py-4 md:px-4 md:py-10 flex items-center relative justify-between md:justify-center">
           {/* Desktop Social Icons */}
           <div className="hidden md:flex gap-4 text-blue-700 text-xl absolute left-4">
-            <a
-              href="https://www.facebook.com/share/1MF8EMTpHm/"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://www.facebook.com/share/1MF8EMTpHm/" target="_blank" rel="noreferrer">
               <FaFacebookF className="hover:text-blue-900" />
             </a>
-
-            <a
-              href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://x.com/KishanT39511380?t=8YU45urmXn1HbnKuTBDwwQ&s=08" target="_blank" rel="noreferrer">
+              <FaTwitter className="hover:text-blue-400" />
+            </a>
+            <a href="https://www.instagram.com/mero_podcast?igsh=MWJ2ZW56ZGV3NWNkYg==" target="_blank" rel="noreferrer">
+              <FaInstagram className="hover:text-pink-500" />
+            </a>
+            <a href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1" target="_blank" rel="noreferrer">
               <FaTiktok className="hover:text-black" />
             </a>
-            <a
-              href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW" target="_blank" rel="noreferrer">
               <FaYoutube className="hover:text-red-600" />
             </a>
-            <a
-              href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF" target="_blank" rel="noreferrer">
               <FaYoutube className="hover:text-red-600" />
             </a>
           </div>
@@ -81,16 +70,12 @@ export default function NewsNavbar() {
                 <h1 className="text-2xl md:text-4xl font-extrabold text-blue-500 text-center">
                   Seven Lake News
                 </h1>
-                
               </div>
             </div>
           </Link>
 
           {/* Mobile Menu Icon */}
-          <button
-            className="md:hidden flex-shrink-0 ml-2"
-            onClick={() => setOpen(true)}
-          >
+          <button className="md:hidden flex-shrink-0 ml-2" onClick={() => setOpen(true)}>
             <Menu className="h-6 w-6 text-gray-800" />
           </button>
         </div>
@@ -170,26 +155,19 @@ export default function NewsNavbar() {
             <a href="https://www.facebook.com/share/1MF8EMTpHm/" target="_blank" rel="noreferrer">
               <FaFacebookF className="hover:text-blue-900" />
             </a>
-            
-            <a
-              href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://x.com/KishanT39511380?t=8YU45urmXn1HbnKuTBDwwQ&s=08" target="_blank" rel="noreferrer">
+              <FaTwitter className="hover:text-blue-400" />
+            </a>
+            <a href="https://www.instagram.com/mero_podcast?igsh=MWJ2ZW56ZGV3NWNkYg==" target="_blank" rel="noreferrer">
+              <FaInstagram className="hover:text-pink-500" />
+            </a>
+            <a href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1" target="_blank" rel="noreferrer">
               <FaTiktok className="hover:text-black" />
             </a>
-            <a
-              href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://youtube.com/@meropodcast-7?si=nogbfcMY0AVxvElW" target="_blank" rel="noreferrer">
               <FaYoutube className="hover:text-red-600" />
             </a>
-            <a
-              href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://youtube.com/@kishanthapa448?si=u6MBd4BuKo7-TOmF" target="_blank" rel="noreferrer">
               <FaYoutube className="hover:text-red-600" />
             </a>
           </div>

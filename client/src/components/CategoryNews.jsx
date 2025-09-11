@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Clock } from "lucide-react"; // ⏰ Clock icon
 import api from "../utils/api";
 
 const stripHtmlTags = (html) => {
   if (!html) return "";
   return html.replace(/<[^>]*>?/gm, "");
+};
+
+// Utility to format "x hours ago"
+const timeAgo = (dateString) => {
+  const now = new Date();
+  const created = new Date(dateString);
+  const diffMs = now - created;
+
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSeconds < 60) return "Just now";
+  if (diffMinutes < 60) return `${diffMinutes} min${diffMinutes > 1 ? "s" : ""} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 };
 
 const CategoryNewsSection = () => {
@@ -67,16 +85,21 @@ const CategoryNewsSection = () => {
                     alt={article.title}
                     className="w-full h-44 object-cover rounded-t-lg"
                   />
-                  <div className="p-4">
+                  <div className="p-4 flex flex-col justify-between h-full">
                     <h3 className="text-md font-semibold text-gray-800">
                       {article.title}
                     </h3>
                     <p className="text-sm text-gray-600 mt-1 line-clamp-2">
                       {stripHtmlTags(article.content).substring(0, 80)}...
                     </p>
-                    <span className="text-blue-600 text-sm hover:underline block mt-2">
-                      Read more →
-                    </span>
+                    {/* Read more + time */}
+                    <div className="flex justify-between items-center mt-2 text-sm text-blue-600 hover:underline">
+                      <span>Read more →</span>
+                      <span className="flex items-center text-blue-500 font-semibold">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {timeAgo(article.createdAt)}
+                      </span>
+                    </div>
                   </div>
                 </article>
               </Link>
@@ -89,4 +112,3 @@ const CategoryNewsSection = () => {
 };
 
 export default CategoryNewsSection;
-

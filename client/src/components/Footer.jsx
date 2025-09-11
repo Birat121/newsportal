@@ -1,4 +1,4 @@
-import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaYoutube, FaTiktok, FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -40,7 +40,28 @@ const Footer = () => {
                   <FaFacebookF />
                 </a>
               </li>
-
+              <li>
+                <a
+                  href="https://x.com/KishanT39511380?t=8YU45urmXn1HbnKuTBDwwQ&s=08"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/mero_podcast?igsh=MWJ2ZW56ZGV3NWNkYg=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white text-2xl"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram />
+                </a>
+              </li>
               <li>
                 <a
                   href="https://www.tiktok.com/@meropodcast?_t=ZS-8yD3e4kZcuN&_r=1"

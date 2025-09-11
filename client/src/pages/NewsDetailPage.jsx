@@ -11,27 +11,15 @@ const getPlainText = (html) => {
   return tmp.textContent || tmp.innerText || "";
 };
 
-// ✅ Show "x hours ago" instead of fixed date
-const getTimeAgo = (isoDate) => {
-  const now = new Date();
-  const past = new Date(isoDate);
-  const diffMs = now - past;
-
-  const seconds = Math.floor(diffMs / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (seconds < 60) return `${seconds} seconds ago`;
-  if (minutes < 60) return `${minutes} minutes ago`;
-  if (hours < 24) return `${hours} hours ago`;
-  if (days < 7) return `${days} days ago`;
-
-  // fallback if older than a week
-  return past.toLocaleDateString("en-GB", {
+const formatEnglishDate = (isoDate) => {
+  return new Date(isoDate).toLocaleString("en-GB", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kathmandu",
   });
 };
 
@@ -106,10 +94,9 @@ const NewsDetailPage = () => {
           <span className="font-medium">Seven Lake News</span>
         </p>
 
-        {/* ✅ Replaced with relative time */}
         <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 flex items-center gap-1">
           <span className="text-sm">📅</span>
-          <span>{getTimeAgo(news.createdAt)}</span>
+          <span>{formatEnglishDate(news.createdAt)}</span>
         </p>
 
         <div className="mb-6 sm:mb-8 lg:mb-10">
@@ -149,3 +136,5 @@ const NewsDetailPage = () => {
 };
 
 export default NewsDetailPage;
+
+  

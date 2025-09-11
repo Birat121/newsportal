@@ -81,9 +81,7 @@ export default function NewsNavbar() {
                 <h1 className="text-2xl md:text-4xl font-extrabold text-blue-500 text-center">
                   Seven Lake News
                 </h1>
-                <span className="text-sm md:text-base text-gray-500 block text-center">
-                  विश्वतर्फको तपाईंको झ्याल
-                </span>
+                
               </div>
             </div>
           </Link>

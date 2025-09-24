@@ -1,16 +1,17 @@
-// ✅ NewsDetailPage.jsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
 import { FaFacebookSquare } from "react-icons/fa";
 
+// Remove HTML tags from content
 const getPlainText = (html) => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || "";
 };
 
+// Format time (you can later change to "3 hours ago" if needed)
 const formatEnglishDate = (isoDate) => {
   return new Date(isoDate).toLocaleString("en-GB", {
     year: "numeric",
@@ -39,19 +40,20 @@ const NewsDetailPage = () => {
         setLoading(false);
       }
     };
+
     fetchNewsDetail();
   }, [id]);
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
-  if (!news) return <p className="text-center py-10 text-red-600">News not found.</p>;
+  if (!news)
+    return <p className="text-center py-10 text-red-600">News not found.</p>;
 
   const plainText = getPlainText(news.content || "").substring(0, 160);
 
-  // ✅ Public URL (frontend)
+  // ✅ Public frontend URL (this is what Facebook will show in post)
   const frontendUrl = `https://sevenlakenews.com/news/${id}`;
-  // ✅ Backend crawler-friendly URL
-  const crawlerUrl = `https://newsportal-pl6g.onrender.com/api/share-preview/${id}`;
 
+  // Facebook share button uses frontend URL
   const handleFacebookShare = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       frontendUrl
@@ -61,20 +63,20 @@ const NewsDetailPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
-      {/* ✅ Meta tags for users + crawlers */}
+      {/* ✅ Meta tags for browsers */}
       <Helmet>
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
         <link rel="canonical" href={frontendUrl} />
 
-        {/* Open Graph (point og:url to crawler endpoint for bots) */}
+        {/* Open Graph */}
         <meta property="og:title" content={news.title} />
         <meta property="og:description" content={plainText} />
         <meta property="og:image" content={news.imageUrl} />
-        <meta property="og:url" content={crawlerUrl} /> {/* 👈 Important */}
+        <meta property="og:url" content={frontendUrl} />
         <meta property="og:type" content="article" />
 
-        {/* Twitter */}
+        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={news.title} />
         <meta name="twitter:description" content={plainText} />
@@ -140,6 +142,4 @@ const NewsDetailPage = () => {
   );
 };
 
-export default NewsDetailPage;
-
-
+export default NewsDetailPage; 

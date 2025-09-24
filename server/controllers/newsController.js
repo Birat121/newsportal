@@ -233,25 +233,29 @@ export async function getSharePreview(req, res) {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).send("News not found");
 
-    // Remove HTML tags from content and limit description length
+    // ✅ Clean description
     const description = news.content
       ? news.content.replace(/<[^>]*>/g, "").substring(0, 160)
       : "";
 
-    // Public URL for the article
+    // ✅ Always use frontend URL for sharing
     const fullUrl = `https://sevenlakenews.com/news/${news._id}`;
 
-    // Ensure the image URL is absolute
+    // ✅ Make sure image is absolute, fallback to default
     const imageUrl = news.imageUrl?.startsWith("http")
       ? news.imageUrl
-      : `https://newsportal-pl6g.onrender.com${news.imageUrl}`;
+      : news.imageUrl
+      ? `https://newsportal-pl6g.onrender.com${news.imageUrl}`
+      : "https://sevenlakenews.com/default-image.jpg";
 
-    // Detect Facebook or other crawlers via User-Agent
+    // ✅ Detect crawlers (FB, Twitter, LinkedIn, etc.)
     const userAgent = req.headers["user-agent"] || "";
-    const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot/i.test(userAgent);
+    const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot/i.test(
+      userAgent
+    );
 
-    // If it's a bot, send HTML with OG tags (no JS)
     if (isCrawler) {
+      // ✅ Serve static OG tags for bots
       const html = `
         <!DOCTYPE html>
         <html lang="en">
@@ -260,12 +264,18 @@ export async function getSharePreview(req, res) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>${news.title}</title>
 
-          <!-- Open Graph Meta Tags -->
+          <!-- Open Graph -->
           <meta property="og:title" content="${news.title}" />
           <meta property="og:description" content="${description}" />
           <meta property="og:image" content="${imageUrl}" />
           <meta property="og:url" content="${fullUrl}" />
           <meta property="og:type" content="article" />
+
+          <!-- Twitter -->
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="${news.title}" />
+          <meta name="twitter:description" content="${description}" />
+          <meta name="twitter:image" content="${imageUrl}" />
         </head>
         <body></body>
         </html>
@@ -274,7 +284,7 @@ export async function getSharePreview(req, res) {
       return res.send(html);
     }
 
-    // If it's a normal browser, just redirect to React frontend
+    // ✅ For humans → redirect to frontend React app
     return res.redirect(fullUrl);
 
   } catch (err) {

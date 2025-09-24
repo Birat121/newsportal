@@ -1,10 +1,10 @@
+// ✅ NewsDetailPage.jsx
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
-import { FaFacebookSquare } from "react-icons/fa"; // Facebook icon
+import { FaFacebookSquare } from "react-icons/fa";
 
-// Remove HTML tags from content
 const getPlainText = (html) => {
   const tmp = document.createElement("div");
   tmp.innerHTML = html;
@@ -39,41 +39,46 @@ const NewsDetailPage = () => {
         setLoading(false);
       }
     };
-
     fetchNewsDetail();
   }, [id]);
 
   if (loading) return <p className="text-center py-10">Loading...</p>;
-  if (!news)
-    return <p className="text-center py-10 text-red-600">News not found.</p>;
+  if (!news) return <p className="text-center py-10 text-red-600">News not found.</p>;
 
   const plainText = getPlainText(news.content || "").substring(0, 160);
 
-  // Public React article URL
-  const articleUrl = `https://sevenlakenews.com/news/${id}`;
-
-  // Backend share-preview URL (so FB gets correct OG tags)
-  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share-preview/${id}`;
+  // ✅ Public URL (frontend)
+  const frontendUrl = `https://sevenlakenews.com/news/${id}`;
+  // ✅ Backend crawler-friendly URL
+  const crawlerUrl = `https://newsportal-pl6g.onrender.com/api/share-preview/${id}`;
 
   const handleFacebookShare = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      sharePreviewUrl
+      frontendUrl
     )}`;
     window.open(facebookUrl, "_blank", "width=600,height=400");
   };
 
   return (
     <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
-      {/* ✅ Meta tags for browsers (not FB) */}
+      {/* ✅ Meta tags for users + crawlers */}
       <Helmet>
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
-        <link rel="canonical" href={articleUrl} />
+        <link rel="canonical" href={frontendUrl} />
+
+        {/* Open Graph (point og:url to crawler endpoint for bots) */}
         <meta property="og:title" content={news.title} />
         <meta property="og:description" content={plainText} />
         <meta property="og:image" content={news.imageUrl} />
-        <meta property="og:url" content={articleUrl} />
+        <meta property="og:url" content={crawlerUrl} /> {/* 👈 Important */}
         <meta property="og:type" content="article" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={news.title} />
+        <meta name="twitter:description" content={plainText} />
+        <meta name="twitter:image" content={news.imageUrl} />
       </Helmet>
 
       <div className="bg-white shadow-lg sm:shadow-2xl rounded-lg sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-200">
@@ -137,4 +142,4 @@ const NewsDetailPage = () => {
 
 export default NewsDetailPage;
 
-  
+

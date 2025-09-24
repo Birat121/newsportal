@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import api from "../utils/api";
-import { FaFacebookSquare } from "react-icons/fa";
+import { FaFacebookSquare } from "react-icons/fa"; // Facebook icon
 
 // Remove HTML tags from content
 const getPlainText = (html) => {
@@ -11,7 +11,6 @@ const getPlainText = (html) => {
   return tmp.textContent || tmp.innerText || "";
 };
 
-// Format time (you can later change to "3 hours ago" if needed)
 const formatEnglishDate = (isoDate) => {
   return new Date(isoDate).toLocaleString("en-GB", {
     year: "numeric",
@@ -50,37 +49,31 @@ const NewsDetailPage = () => {
 
   const plainText = getPlainText(news.content || "").substring(0, 160);
 
-  // ✅ Public frontend URL (this is what Facebook will show in post)
-  const frontendUrl = `https://sevenlakenews.com/news/${id}`;
+  // Public React article URL
+  const articleUrl = `https://sevenlakenews.com/news/${id}`;
 
-  // Facebook share button uses frontend URL
+  // Backend share-preview URL (so FB gets correct OG tags)
+  const sharePreviewUrl = `https://newsportal-pl6g.onrender.com/api/news/share-preview/${id}`;
+
   const handleFacebookShare = () => {
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      frontendUrl
+      sharePreviewUrl
     )}`;
     window.open(facebookUrl, "_blank", "width=600,height=400");
   };
 
   return (
     <div className="max-w-5xl mx-auto px-3 py-4 sm:px-6 sm:py-8 lg:py-10">
-      {/* ✅ Meta tags for browsers */}
+      {/* ✅ Meta tags for browsers (not FB) */}
       <Helmet>
         <title>{news.title} | Seven Lake News</title>
         <meta name="description" content={plainText} />
-        <link rel="canonical" href={frontendUrl} />
-
-        {/* Open Graph */}
+        <link rel="canonical" href={articleUrl} />
         <meta property="og:title" content={news.title} />
         <meta property="og:description" content={plainText} />
         <meta property="og:image" content={news.imageUrl} />
-        <meta property="og:url" content={frontendUrl} />
+        <meta property="og:url" content={articleUrl} />
         <meta property="og:type" content="article" />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={news.title} />
-        <meta name="twitter:description" content={plainText} />
-        <meta name="twitter:image" content={news.imageUrl} />
       </Helmet>
 
       <div className="bg-white shadow-lg sm:shadow-2xl rounded-lg sm:rounded-2xl p-4 sm:p-6 lg:p-8 border border-gray-200">
@@ -142,4 +135,6 @@ const NewsDetailPage = () => {
   );
 };
 
-export default NewsDetailPage; 
+export default NewsDetailPage;
+
+

@@ -233,20 +233,24 @@ export async function getSharePreview(req, res) {
     const news = await News.findById(req.params.id);
     if (!news) return res.status(404).send("News not found");
 
+    // Remove HTML tags from content and limit description length
     const description = news.content
       ? news.content.replace(/<[^>]*>/g, "").substring(0, 160)
       : "";
 
+    // Public URL for the article
     const fullUrl = `https://sevenlakenews.com/news/${news._id}`;
+
+    // Ensure the image URL is absolute
     const imageUrl = news.imageUrl?.startsWith("http")
       ? news.imageUrl
-      : news.imageUrl
-      ? `https://newsportal-pl6g.onrender.com${news.imageUrl}`
-      : "https://sevenlakenews.com/default-image.jpg";
+      : `https://newsportal-pl6g.onrender.com${news.imageUrl}`;
 
+    // Detect Facebook or other crawlers via User-Agent
     const userAgent = req.headers["user-agent"] || "";
     const isCrawler = /facebookexternalhit|facebot|twitterbot|linkedinbot/i.test(userAgent);
 
+    // If it's a bot, send HTML with OG tags (no JS)
     if (isCrawler) {
       const html = `
         <!DOCTYPE html>
@@ -256,18 +260,12 @@ export async function getSharePreview(req, res) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>${news.title}</title>
 
-          <!-- Open Graph -->
+          <!-- Open Graph Meta Tags -->
           <meta property="og:title" content="${news.title}" />
           <meta property="og:description" content="${description}" />
           <meta property="og:image" content="${imageUrl}" />
-          <meta property="og:url" content="${encodeURIComponent(fullUrl)}" />
+          <meta property="og:url" content="${fullUrl}" />
           <meta property="og:type" content="article" />
-
-          <!-- Twitter -->
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="${news.title}" />
-          <meta name="twitter:description" content="${description}" />
-          <meta name="twitter:image" content="${imageUrl}" />
         </head>
         <body></body>
         </html>
@@ -276,6 +274,7 @@ export async function getSharePreview(req, res) {
       return res.send(html);
     }
 
+    // If it's a normal browser, just redirect to React frontend
     return res.redirect(fullUrl);
 
   } catch (err) {
@@ -283,4 +282,3 @@ export async function getSharePreview(req, res) {
     res.status(500).send("Internal Server Error");
   }
 }
-  

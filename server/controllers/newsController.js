@@ -72,14 +72,7 @@ export async function createNews(req, res) {
 export async function getNews(req, res) {
   try {
     const filter = {};
-
-    if (req.query.category) {
-      if (req.query.category === "समाचार") {
-        filter.parentCategory = "समाचार";
-      } else {
-        filter.category = req.query.category;
-      }
-    }
+    if (req.query.category) filter.category = req.query.category;
 
     const newsList = await News.find(filter).sort({ createdAt: -1 });
     res.json(newsList);
@@ -87,7 +80,6 @@ export async function getNews(req, res) {
     res.status(500).json({ message: err.message });
   }
 }
-
 
 // GET /api/news/getNews/:id
 export async function getNewsById(req, res) {
@@ -166,59 +158,42 @@ export async function getNewsByCategory(req, res) {
     const limit = parseInt(req.query.limit) || 5;
     const skip = (page - 1) * limit;
 
-    const filter =
-      slug === "समाचार"
-        ? { parentCategory: "समाचार" }
-        : { category: slug };
-
+    const filter = { category: slug };
     const total = await News.countDocuments(filter);
-    const news = await News.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    const news = await News.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
-    res.json({
-      news,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit)
-    });
+    res.json({ news, currentPage: page, totalPages: Math.ceil(total / limit) });
   } catch (err) {
-    res.status(500).json({
-      message: "Error fetching category news",
-      error: err.message
-    });
+    res.status(500).json({ message: "Error fetching category news", error: err.message });
   }
 }
-
 
 // GET /api/news/category-section (for homepage)
 export async function getNewsByCategoryGroup(req, res) {
   try {
-    const categories = ["समाचार", "समाज", "राजनीति", "खेलकुद", "मनोरंजन", "प्रदेश"];
+    const categories = ["समाचार", "समाज", "राजनीति", "खेलकुद",  "मनोरंजन",  "प्रदेश"];
     const result = {};
 
     for (const cat of categories) {
-      const filter =
-        cat === "समाचार"
-          ? { parentCategory: "समाचार" }
-          : { category: cat };
-
-      const news = await News.find(filter)
-        .sort({ createdAt: -1 })
-        .limit(3);
-
+      const news = await News.find({ category: cat }).sort({ createdAt: -1 }).limit(3);
       result[cat] = news;
     }
 
     res.json(result);
   } catch (err) {
-    res.status(500).json({
-      message: "Error fetching grouped news",
-      error: err.message
-    });
+    res.status(500).json({ message: "Error fetching grouped news", error: err.message });
   }
 }
 
+// GET /api/news/trending
+export async function getTrendingNews(req, res) {
+  try {
+    const trendingNews = await News.find({ trending: true }).sort({ createdAt: -1 }).limit(10);
+    res.json(trendingNews);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching trending news" });
+  }
+}
 
 // Get dashboard stats
 export const getDashboardStats = async (req, res) => {

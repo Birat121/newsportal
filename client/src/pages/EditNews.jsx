@@ -7,7 +7,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const categories = [
-  { label: "News", value: "समाचार" },
   { label: "Society", value: "समाज" },
   { label: "Politics", value: "राजनीति" },
   { label: "Local Government", value: "स्थानीय तह" },
@@ -17,6 +16,7 @@ const categories = [
   { label: "Sports", value: "खेलकुद" },
   { label: "Province", value: "प्रदेश" },
 ];
+
 
 const EditNews = () => {
   const { id } = useParams();

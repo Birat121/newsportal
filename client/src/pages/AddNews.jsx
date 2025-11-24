@@ -7,7 +7,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const categories = [
-  "समाचार",
   "समाज",
   "राजनीति",
   "स्थानीय तह",
@@ -17,6 +16,7 @@ const categories = [
   "खेलकुद",
   "प्रदेश",
 ];
+
 
 const AddNews = () => {
   const [newsItems, setNewsItems] = useState([

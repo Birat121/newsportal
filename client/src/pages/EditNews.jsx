@@ -7,15 +7,16 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const categories = [
-  { label: "Society", value: "समाज" },
-  { label: "Politics", value: "राजनीति" },
-  { label: "Local Government", value: "स्थानीय तह" },
-  { label: "Entertainment", value: "मनोरंजन" },
-  { label: "Literature", value: "साहित्य" },
-  { label: "Interview", value: "अन्तरबार्ता" },
-  { label: "Sports", value: "खेलकुद" },
-  { label: "Province", value: "प्रदेश" },
+  { label: "समाज", value: "समाज" },
+  { label: "राजनीति", value: "राजनीति" },
+  { label: "स्थानीय तह", value: "स्थानीय तह" },
+  { label: "मनोरंजन", value: "मनोरंजन" },
+  { label: "साहित्य", value: "साहित्य" },
+  { label: "अन्तरबार्ता", value: "अन्तरबार्ता" },
+  { label: "खेलकुद", value: "खेलकुद" },
+  { label: "प्रदेश", value: "प्रदेश" },
 ];
+
 
 
 const EditNews = () => {
